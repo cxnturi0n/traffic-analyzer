@@ -1,0 +1,109 @@
+.leaflet-container {
+  height: 100%;
+  width: 50%;
+  position: relative;
+  border: 5px solid #73AD21;
+}
+
+#map-query-filter {
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items:center;
+
+  border: 5px solid #73AD21;
+
+  height: 100%;
+  width: 18%;
+  overflow: scroll;
+}
+
+#freight-image{
+  border: 5px solid #73AD21;
+
+}
+
+#welcome {
+  font-size: 30px; /* Adjust the font size as needed */
+  text-align: center;
+  padding: 50px;
+  background: linear-gradient(to right, #73AD21, #4CAF50);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.map-query-filter-div{width: 80%}
+
+#ResultTableTooltip{
+  display: flex;
+  direction: row;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 95%;
+  margin-top: 5px;
+}
+
+#axisBtn {
+  text-transform: capitalize;
+}
+
+#myGrid {
+  flex: 1;
+}
+
+.my-chart {
+  flex: 1;
+  margin-top: 0.5rem;
+  border: 5px solid #73AD21;
+}
+#leaflet-map-query-container{
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  top: 10%;
+  width: 100%;
+  height: 80%;
+}
+
+#yAxis.tick line{
+  visibility:hidden;
+}
+
+
+.MuiPaper-root{
+  border: 5px solid #73AD21;
+}
+
+
+.MuiOutlinedInput-notchedOutline {
+  border-color: #73AD21 !important;
+  border-width: 3px !important;
+}
+
+.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: #73AD21 !important;
+}
+
+.MuiFormLabel-root {
+  color:black !important
+}
+
+
+#root{
+  height: 100vh; 
+}
+
+
+html *
+{
+   font-family: Inter !important;
+}
+
+
