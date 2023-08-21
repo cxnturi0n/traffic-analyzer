@@ -14,7 +14,7 @@ var server = express();
 
 server.use(bodyParser.json());
 server.use(cors({
-  origin: env.ALLOW_ORIGIN_HEADER_REACT_WEBAPP, // Set the allowed to React Webapp origin
+  origin: env.ALLOW_ORIGIN_HEADER_REACT_WEBAPP, // Set the allowed origin to React Webapp origin
   credentials: true, // Gitpod requires credentials for private ports
 }));
 
