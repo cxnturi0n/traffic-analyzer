@@ -8,15 +8,12 @@ import { serverRouter } from "./src/routes/server.routes.js";
 import * as env from "./properties.js";
 import cors from "cors"
 import helmet from "helmet"
-
 import { rateLimit } from "express-rate-limit";
-
-//Add express api limiter
 
 var server = express();
 
 server.use(bodyParser.json());
-server.use(cors())
+server.use(cors());
 
 server.use(env.API_PREFIX, serverRouter);
 server.use(helmet());
@@ -38,5 +35,5 @@ postgres.initPool(
 );
 
 server.listen(env.SERVER_PORT, function () {
-  console.log("Example app listening at http://%s", env.SERVER_PORT);
+  console.log("Traffic analyzer express server listening on port", env.SERVER_PORT);
 });

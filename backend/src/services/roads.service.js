@@ -49,17 +49,17 @@ function getPolygonCoords(records) {
 }
 
 function getRoadsPolygonsQuery(region) {
-  const query = `SELECT ogc_fid AS road_id, ST_AsGeoJSON(wkb_geometry) AS polygons FROM ${region}`;
+  const query = `SELECT ogc_fid AS road_id, ST_AsGeoJSON(wkb_geometry) AS polygons FROM ${region}_streets`;
   return query;
 }
 
 function getSpecificRoadsPolygonsQuery(region) {
-  const query = `SELECT ogc_fid AS road_id, ST_AsGeoJSON(wkb_geometry) AS polygons FROM ${region} WHERE ogc_fid = ANY($1::int[])`;
+  const query = `SELECT ogc_fid AS road_id, ST_AsGeoJSON(wkb_geometry) AS polygons FROM ${region}_streets WHERE ogc_fid = ANY($1::int[])`;
   return query;
 }
 
 function getRoadCount(region) {
-  const query = `SELECT count(*) AS road_count FROM ${region}`;
+  const query = `SELECT count(*) AS road_count FROM ${region}_streets`;
   return query;
 }
 

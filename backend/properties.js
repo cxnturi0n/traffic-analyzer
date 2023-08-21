@@ -1,7 +1,3 @@
-import { config } from "dotenv";
-
-config();
-
 export const API_PREFIX = process.env.API_PREFIX || "/";
 
 export const SERVER_PORT = process.env.SERVER_PORT || 8080;

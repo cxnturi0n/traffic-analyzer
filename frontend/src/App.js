@@ -14,6 +14,7 @@ import RoadIdsSelector from "./components/RoadIdsSelector";
 import GranularitySelector from "./components/GranularitySelector";
 import { Histogram } from "./components/Histogram";
 import ObservationsTimeseries from "./components/ObservationTimeseries";
+import { REACT_APP_EXPRESS_API_PREFIX, REACT_APP_EXPRESS_BASE_URL } from "./properties";
 
 export default function App() {
   const [roads, setRoads] = useState([]);
@@ -48,9 +49,11 @@ export default function App() {
     Math.floor(Date.UTC(2021, 9, 10, 23, 59, 0) / 1000)
   );
   function generateRequestUrl(query) {
-    const baseRequest = "http://192.168.1.130:8087/traffic-analyzer/api";
+    const baseRequest = `${REACT_APP_EXPRESS_BASE_URL}${REACT_APP_EXPRESS_API_PREFIX}`;
     const observationEndpoint = "/roads/observations";
     const commonParams = `granularity=${granularity}&region=${region}&polygons=`;
+
+    console.log(baseRequest)
 
     if (query === "roads") {
       return `${baseRequest}/roads?region=${region}${getRoadIdsQuery()}&count=false`;
