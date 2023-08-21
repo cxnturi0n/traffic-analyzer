@@ -11,7 +11,7 @@ export default function QueryButton({loading, handleClick}) {
             fontSize: "15px", // Increase the font size
             padding: "15px 30px", // Adjust padding to make the button bigger
             backgroundColor: "#73AD21",
-            ":hover": { backgroundColor: "rgb(67, 101, 225)" }}}
+            ":hover": { backgroundColor: "#5D3FD3" }}}
           onClick={handleClick}
           endIcon={<SearchIcon />}
           loading={loading}

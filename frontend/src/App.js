@@ -127,7 +127,7 @@ export default function App() {
         .filter((road) => roadIds.includes(road.road_id))
         .map((road) => road.polygon);
       setRoadsToShow(newRoadsToshow);
-      setRoadsColor("purple");
+      setRoadsColor("#5D3FD3");
       return;
     }
     const oldRoadPolygons = roads.map((road) => road.polygon);

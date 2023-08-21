@@ -8,7 +8,9 @@ body {
   background-color:rgb(185, 236, 178);
   height: 100%;
   background: linear-gradient(156.8deg, rgb(30, 144, 231) 27.1%, rgb(67, 101, 225) 77.8%);
-
+  margin: 0;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 code {

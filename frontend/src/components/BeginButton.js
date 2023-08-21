@@ -17,7 +17,7 @@ export default function BeginButton() {
           fontSize: "24px", // Increase the font size
           padding: "15px 30px", // Adjust padding to make the button bigger
           backgroundColor: "#73AD21",
-          ":hover": { backgroundColor: "rgb(67, 101, 225)" },
+          ":hover": { backgroundColor: "#5D3FD3" },
         }}
         onClick={navigateToTrafficAnalyzer}
         endIcon={<PlayArrowIcon />}
