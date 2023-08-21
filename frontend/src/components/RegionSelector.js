@@ -20,10 +20,15 @@ export default function RegionSelector({ chooseRegion, chooseRoadCount }) {
   useEffect(() => {
     console.log(`${REACT_APP_EXPRESS_BASE_URL}${REACT_APP_EXPRESS_API_PREFIX}`, REACT_APP_EXPRESS_BASE_URL, REACT_APP_EXPRESS_API_PREFIX)
 
-    if(!region || region.length===0)
+    if (!region || region.length === 0)
       return;
     const request = `${REACT_APP_EXPRESS_BASE_URL}${REACT_APP_EXPRESS_API_PREFIX}/roads?region=${region}&count=true`;
-    axios
+
+    const axiosInstance = axios.create({
+      withCredentials: true, // Include credentials in requests (required by gitpod)
+    });
+
+    axiosInstance
       .get(request)
       .then((response) => {
         chooseRoadCount(response.data[0].road_count);

@@ -96,7 +96,11 @@ export default function App() {
     const request = generateRequestUrl(query);
     setLoading(true);
     console.log(request);
-    axios
+    const axiosInstance = axios.create({
+      withCredentials: true, // Include credentials in requests (required by gitpod)
+    });
+
+    axiosInstance
       .get(request)
       .then((response) => {
         console.log(response);

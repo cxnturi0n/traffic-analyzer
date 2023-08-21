@@ -27,7 +27,7 @@ for json_file in "$input_dir"/*.json; do
     }
     
     # Load the GeoJSON into PostgreSQL using ogr2ogr
-    ogr2ogr -f "PostgreSQL" "PG:dbname=$db_name user=$db_user password=$db_password host=$db_host" "$base_name.geojson" -nln "$base_name" -nlt "POLYGON" || {
+    ogr2ogr -f "PostgreSQL" "PG:dbname=$db_name user=$db_user password=$db_password host=$db_host" "$input_dir/$base_name.geojson" -nln "$base_name" -nlt "POLYGON" || {
         echo "Error loading $base_name.geojson into PostgreSQL"
         exit 1
     }

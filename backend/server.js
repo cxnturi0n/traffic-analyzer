@@ -13,12 +13,15 @@ import { rateLimit } from "express-rate-limit";
 var server = express();
 
 server.use(bodyParser.json());
-server.use(cors());
+server.use(cors({
+  origin: env.ALLOW_ORIGIN_HEADER_REACT_WEBAPP, // Set the allowed to React Webapp origin
+  credentials: true, // Gitpod requires credentials for private ports
+}));
 
 server.use(env.API_PREFIX, serverRouter);
 server.use(helmet());
 server.use(rateLimit({ //max 20 requests per minute
-  windowMs: 1 * 60 * 1000, 
+  windowMs: 1 * 60 * 1000,
   max: 20,
 }))
 server.use(validateQueryParameters)
