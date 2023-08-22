@@ -4,6 +4,6 @@ tasks:
       command: docker compose -f /workspace/traffic-analyzer/deploy/docker-compose.yml up -d
 ports:
     - name: Traffic Analyzer Web App
-    - description: Traffic Analyzer React Web App
-    - port: 80
-    - onOpen: open-browser
+      description: Traffic Analyzer React Web App
+      port: 80
+      onOpen: open-browser
