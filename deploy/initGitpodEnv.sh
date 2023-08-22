@@ -14,10 +14,8 @@ run_command() {
 
 echo "SET UP GitPod Environment"
 
-# Install netcat used for checking connectivity later
 run_command sudo apt-get install -y netcat
 
-# Downloads road geometries
 echo "Downloading road geometries..."
 run_command wget --load-cookies /tmp/cookies.txt \
     "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate \
@@ -27,9 +25,7 @@ echo "Unzipping and cleaning up road geometries..."
 run_command rm -r geospatial-data
 run_command unzip geospatial-data.zip
 run_command rm geospatial-data.zip
-run_command rm ./geospatial-data/*.json
 
-# Download Anderlecht obu data
 echo "Downloading Anderlecht obu data..."
 run_command wget --load-cookies /tmp/cookies.txt \
     "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate \
@@ -40,13 +36,14 @@ run_command rm -r obu-data
 run_command unzip obu-data.zip
 run_command rm obu-data.zip
 
-# Install ogr2ogr
 echo "Installing ogr2ogr..."
 run_command sudo apt-get update
 run_command sudo apt-get -y install gdal-bin
 
-# Build react webapp and nodejs express server
 echo "Building react webapp and nodejs express server..."
 run_command docker compose build
+
+echo "Pulling neo4j and postgis images..."
+run_command docker compose pull
 
 echo "Setup completed successfully."
