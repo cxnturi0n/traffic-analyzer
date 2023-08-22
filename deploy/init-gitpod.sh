@@ -43,6 +43,12 @@ echo "Installing ogr2ogr..."
 run_command sudo apt-get update
 run_command sudo apt-get -y install gdal-bin
 
+echo "Deleting databases volumes"
+run_command docker rm -f postgis
+run_command docker volume rm -f deploy_postgis_data
+run_command docker rm -f neo4j
+run_command docker volume rm -f deploy_neo4j_data
+
 echo "Building react webapp and nodejs express server..."
 run_command docker compose build
 
