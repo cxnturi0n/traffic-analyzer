@@ -35,3 +35,5 @@ for json_file in "$input_dir"/*.json; do
     echo "Processed and loaded $base_name.geojson into $db_name"
 done
 
+rm *.json
+
