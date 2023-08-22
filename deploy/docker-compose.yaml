@@ -25,7 +25,7 @@ services:
     build: 
       context: '../frontend'
       args:
-        REACT_APP_EXPRESS_BASE_URL: https://8087-cxnturi0n-trafficanalyz-89tcziplzku.ws-eu104.gitpod.io
+        REACT_APP_EXPRESS_BASE_URL: https://8087-cxnturi0n-trafficanalyz-qpm09okhisl.ws-eu104.gitpod.io
         REACT_APP_EXPRESS_API_PREFIX: /traffic-analyzer/api
     container_name: nginx_react
     ports:
