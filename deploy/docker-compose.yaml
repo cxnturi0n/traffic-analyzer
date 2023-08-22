@@ -44,18 +44,18 @@ services:
     restart: on-failure
    
 
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: pgadmin4
-    ports:
-      - '5555:80'
-    environment:
-      - PGADMIN_DEFAULT_EMAIL=f.cinicolo@studenti.unina.it
-      - PGADMIN_DEFAULT_PASSWORD=password
-    volumes:
-      - pgadmin_data:/var/lib/pgadmin/data
-    depends_on:
-      - postgis
+  # pgadmin:
+  #   image: dpage/pgadmin4
+  #   container_name: pgadmin4
+  #   ports:
+  #     - '5555:80'
+  #   environment:
+  #     - PGADMIN_DEFAULT_EMAIL=f.cinicolo@studenti.unina.it
+  #     - PGADMIN_DEFAULT_PASSWORD=password
+  #   volumes:
+  #     - pgadmin_data:/var/lib/pgadmin/data
+  #   depends_on:
+  #     - postgis
 
 
 volumes:
