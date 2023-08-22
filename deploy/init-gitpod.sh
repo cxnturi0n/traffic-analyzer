@@ -19,6 +19,8 @@ echo "SET UP GitPod Environment"
 
 run_command sudo apt-get install -y netcat
 
+run_command sudo chown -R gitpod:gitpod obu-data
+
 echo "Downloading road geometries..."
 run_command wget --load-cookies /tmp/cookies.txt \
     "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate \
