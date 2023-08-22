@@ -57,6 +57,7 @@ run_command docker compose pull
 
 echo "Starting containers in detached mode..."
 run_command docker compose up -d
+run_command sudo chown gitpod:gitpod obu-data
 
 echo "Waiting 10 seconds for databases to boot..."
 sleep 10
@@ -67,8 +68,8 @@ run_command chmod +x init-postgis.sh
 run_command ./init-postgis.sh
 
 # Run init-neo4j.sh
-echo "Initializing Neo4j..."
-run_command chmod +x init-neo4j.sh
-run_command ./init-neo4j.sh
+# echo "Initializing Neo4j..."
+# run_command chmod +x init-neo4j.sh
+# run_command ./init-neo4j.sh
 
 echo "Setup completed successfully."
