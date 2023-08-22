@@ -2,4 +2,3 @@
 /frontend/node_modules/
 /deploy/obu-data/*.csv
 /deploy/geospatial-data/*.geojson
-/deploy/geospatial-data/*.json
