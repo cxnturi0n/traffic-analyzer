@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Positioning to gitpod deploy directory
+cd /workspace/traffic-analyzer/deploy
+
 # Function to handle errors
 handle_error() {
     echo "Error: $1"
