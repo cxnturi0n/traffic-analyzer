@@ -1,0 +1,1 @@
+Road geojsons omitted to keep repo small. Download it from my drive: https://drive.google.com/file/d/1BXGqJDuagXCaF2V50XXh8zrCQFPSu7X4/view?usp=sharing. Source: https://www.kaggle.com/datasets/giobbu/belgium-obu.
