@@ -14,7 +14,7 @@ run_command() {
 
 echo "SETTING UP Environment"
 
-run_command sudo apt-get install -y netcat
+run_command sudo apt-get install -y netcat unzip jq
 
 echo "Downloading road geometries..."
 run_command wget --load-cookies /tmp/cookies.txt \
