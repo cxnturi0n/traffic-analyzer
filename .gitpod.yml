@@ -1,7 +1,7 @@
 tasks:
     - name: Traffic Analyzer Anderlecht Demo
       init: chmod +x /workspace/traffic-analyzer/deploy/init-gitpod.sh && /workspace/traffic-analyzer/deploy/init-gitpod.sh
-      command: docker compose -f /workspace/traffic-analyzer/deploy/docker-compose.yml up -d
+      command: docker compose -f /workspace/traffic-analyzer/deploy/docker-compose.yaml up -d
 ports:
     - name: Traffic Analyzer Web App
       description: Traffic Analyzer React Web App
