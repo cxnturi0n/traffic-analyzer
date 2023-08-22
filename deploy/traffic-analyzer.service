@@ -1,0 +1,11 @@
+[Unit]
+Description=Runs docker containers needed for traffic analysis on boot
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/docker-compose -f /workspace/traffic-analyzer/deploy/docker-compose.yaml up -d
+
+[Install]
+WantedBy=multi-user.target
