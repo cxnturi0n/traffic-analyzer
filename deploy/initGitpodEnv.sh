@@ -17,9 +17,6 @@ echo "SET UP GitPod Environment"
 # Install netcat used for checking connectivity later
 run_command sudo apt-get install -y netcat
 
-# Switch to deploy dir
-run_command cd /workspace/traffic-analyzer/deploy/
-
 # Downloads road geometries
 echo "Downloading road geometries..."
 run_command wget --load-cookies /tmp/cookies.txt \
