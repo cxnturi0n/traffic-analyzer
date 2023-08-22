@@ -24,7 +24,7 @@ COPY . .
 RUN npm run build
 
 # Fetching the latest nginx image
-FROM nginx
+FROM nginx:alpine
 
 EXPOSE 80
 
