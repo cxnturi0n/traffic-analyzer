@@ -21,31 +21,31 @@ echo "Loading Anderlecht csvs..."
 echo '{
    "statements":[
       {
-         "statement":"CALL apoc.periodic.iterate('\''LOAD CSV FROM \"file:///And_05min_0101_0103_2019.csv\" AS line RETURN line'\'', '\''CREATE (o:ObservationAnderlecht_5min { road_id: toInteger(line[1]), region: \"Anderlecht\", timestamp: apoc.date.parse(line[0], \"s\", \"yyyy-MM-dd HH:mm:ss\"), num_vehicles: toInteger(line[2]), avg_speed: toFloat(line[3]) })'\'', { batchSize: 10000, parallel: true });"
+         "statement":"CALL apoc.periodic.iterate('\''LOAD CSV FROM \"file:///And_05min_0101_0103_2019.csv\" AS line RETURN line'\'', '\''CREATE (o:ObservationAnderlecht_5min { road_id: toInteger(line[1]), timestamp: apoc.date.parse(line[0], \"s\", \"yyyy-MM-dd HH:mm:ss\"), num_vehicles: toInteger(line[2]), avg_speed: toFloat(line[3]) })'\'', { batchSize: 10000, parallel: true });"
       },
       {
-         "statement":"CALL apoc.periodic.iterate('\''LOAD CSV FROM \"file:///And_05min_0506_1610_2021.csv\" AS line RETURN line'\'', '\''CREATE (o:ObservationAnderlecht_5min { road_id: toInteger(line[1]), region: \"Anderlecht\", timestamp: apoc.date.parse(line[0], \"s\", \"yyyy-MM-dd HH:mm:ss\"), num_vehicles: toInteger(line[2]), avg_speed: toFloat(line[3]) })'\'', { batchSize: 10000, parallel: true });"
+         "statement":"CALL apoc.periodic.iterate('\''LOAD CSV FROM \"file:///And_05min_0506_1610_2021.csv\" AS line RETURN line'\'', '\''CREATE (o:ObservationAnderlecht_5min { road_id: toInteger(line[1]), timestamp: apoc.date.parse(line[0], \"s\", \"yyyy-MM-dd HH:mm:ss\"), num_vehicles: toInteger(line[2]), avg_speed: toFloat(line[3]) })'\'', { batchSize: 10000, parallel: true });"
       },
       {
-         "statement":"CALL apoc.periodic.iterate('\''LOAD CSV FROM \"file:///And_05min_1303_0606_2021.csv\" AS line RETURN line'\'', '\''CREATE (o:ObservationAnderlecht_5min { road_id: toInteger(line[1]), region: \"Anderlecht\", timestamp: apoc.date.parse(line[0], \"s\", \"yyyy-MM-dd HH:mm:ss\"), num_vehicles: toInteger(line[2]), avg_speed: toFloat(line[3]) })'\'', { batchSize: 10000, parallel: true });"
+         "statement":"CALL apoc.periodic.iterate('\''LOAD CSV FROM \"file:///And_05min_1303_0606_2021.csv\" AS line RETURN line'\'', '\''CREATE (o:ObservationAnderlecht_5min { road_id: toInteger(line[1]), timestamp: apoc.date.parse(line[0], \"s\", \"yyyy-MM-dd HH:mm:ss\"), num_vehicles: toInteger(line[2]), avg_speed: toFloat(line[3]) })'\'', { batchSize: 10000, parallel: true });"
       },
       {
-         "statement":"CALL apoc.periodic.iterate('\''LOAD CSV FROM \"file:///And_15min_0101_0103_2019.csv\" AS line RETURN line'\'', '\''CREATE (o:ObservationAnderlecht_15min { road_id: toInteger(line[1]), region: \"Anderlecht\", timestamp: apoc.date.parse(line[0], \"s\", \"yyyy-MM-dd HH:mm:ss\"), num_vehicles: toInteger(line[2]), avg_speed: toFloat(line[3]) })'\'', { batchSize: 10000, parallel: true });"
+         "statement":"CALL apoc.periodic.iterate('\''LOAD CSV FROM \"file:///And_15min_0101_0103_2019.csv\" AS line RETURN line'\'', '\''CREATE (o:ObservationAnderlecht_15min { road_id: toInteger(line[1]), timestamp: apoc.date.parse(line[0], \"s\", \"yyyy-MM-dd HH:mm:ss\"), num_vehicles: toInteger(line[2]), avg_speed: toFloat(line[3]) })'\'', { batchSize: 10000, parallel: true });"
       },
       {
-         "statement":"CALL apoc.periodic.iterate('\''LOAD CSV FROM \"file:///And_15min_0506_1610_2021.csv\" AS line RETURN line'\'', '\''CREATE (o:ObservationAnderlecht_15min { road_id: toInteger(line[1]), region: \"Anderlecht\", timestamp: apoc.date.parse(line[0], \"s\", \"yyyy-MM-dd HH:mm:ss\"), num_vehicles: toInteger(line[2]), avg_speed: toFloat(line[3]) })'\'', { batchSize: 10000, parallel: true });"
+         "statement":"CALL apoc.periodic.iterate('\''LOAD CSV FROM \"file:///And_15min_0506_1610_2021.csv\" AS line RETURN line'\'', '\''CREATE (o:ObservationAnderlecht_15min { road_id: toInteger(line[1]), timestamp: apoc.date.parse(line[0], \"s\", \"yyyy-MM-dd HH:mm:ss\"), num_vehicles: toInteger(line[2]), avg_speed: toFloat(line[3]) })'\'', { batchSize: 10000, parallel: true });"
       },
       {
-         "statement":"CALL apoc.periodic.iterate('\''LOAD CSV FROM \"file:///And_15min_1303_0606_2021.csv\" AS line RETURN line'\'', '\''CREATE (o:ObservationAnderlecht_15min { road_id: toInteger(line[1]), region: \"Anderlecht\", timestamp: apoc.date.parse(line[0], \"s\", \"yyyy-MM-dd HH:mm:ss\"), num_vehicles: toInteger(line[2]), avg_speed: toFloat(line[3]) })'\'', { batchSize: 10000, parallel: true });"
+         "statement":"CALL apoc.periodic.iterate('\''LOAD CSV FROM \"file:///And_15min_1303_0606_2021.csv\" AS line RETURN line'\'', '\''CREATE (o:ObservationAnderlecht_15min { road_id: toInteger(line[1]), timestamp: apoc.date.parse(line[0], \"s\", \"yyyy-MM-dd HH:mm:ss\"), num_vehicles: toInteger(line[2]), avg_speed: toFloat(line[3]) })'\'', { batchSize: 10000, parallel: true });"
       },
       {
-         "statement":"CALL apoc.periodic.iterate('\''LOAD CSV FROM \"file:///And_30min_0101_0103_2019.csv\" AS line RETURN line'\'', '\''CREATE (o:ObservationAnderlecht_30min { road_id: toInteger(line[1]), region: \"Anderlecht\", timestamp: apoc.date.parse(line[0], \"s\", \"yyyy-MM-dd HH:mm:ss\"), num_vehicles: toInteger(line[2]), avg_speed: toFloat(line[3]) })'\'', { batchSize: 10000, parallel: true });"
+         "statement":"CALL apoc.periodic.iterate('\''LOAD CSV FROM \"file:///And_30min_0101_0103_2019.csv\" AS line RETURN line'\'', '\''CREATE (o:ObservationAnderlecht_30min { road_id: toInteger(line[1]), timestamp: apoc.date.parse(line[0], \"s\", \"yyyy-MM-dd HH:mm:ss\"), num_vehicles: toInteger(line[2]), avg_speed: toFloat(line[3]) })'\'', { batchSize: 10000, parallel: true });"
       },
       {
-         "statement":"CALL apoc.periodic.iterate('\''LOAD CSV FROM \"file:///And_30min_0506_1610_2021.csv\" AS line RETURN line'\'', '\''CREATE (o:ObservationAnderlecht_30min { road_id: toInteger(line[1]), region: \"Anderlecht\", timestamp: apoc.date.parse(line[0], \"s\", \"yyyy-MM-dd HH:mm:ss\"), num_vehicles: toInteger(line[2]), avg_speed: toFloat(line[3]) })'\'', { batchSize: 10000, parallel: true });"
+         "statement":"CALL apoc.periodic.iterate('\''LOAD CSV FROM \"file:///And_30min_0506_1610_2021.csv\" AS line RETURN line'\'', '\''CREATE (o:ObservationAnderlecht_30min { road_id: toInteger(line[1]), timestamp: apoc.date.parse(line[0], \"s\", \"yyyy-MM-dd HH:mm:ss\"), num_vehicles: toInteger(line[2]), avg_speed: toFloat(line[3]) })'\'', { batchSize: 10000, parallel: true });"
       },
       {
-         "statement":"CALL apoc.periodic.iterate('\''LOAD CSV FROM \"file:///And_30min_1303_0606_2021.csv\" AS line RETURN line'\'', '\''CREATE (o:ObservationAnderlecht_30min { road_id: toInteger(line[1]), region: \"Anderlecht\", timestamp: apoc.date.parse(line[0], \"s\", \"yyyy-MM-dd HH:mm:ss\"), num_vehicles: toInteger(line[2]), avg_speed: toFloat(line[3]) })'\'', { batchSize: 10000, parallel: true });"
+         "statement":"CALL apoc.periodic.iterate('\''LOAD CSV FROM \"file:///And_30min_1303_0606_2021.csv\" AS line RETURN line'\'', '\''CREATE (o:ObservationAnderlecht_30min { road_id: toInteger(line[1]), timestamp: apoc.date.parse(line[0], \"s\", \"yyyy-MM-dd HH:mm:ss\"), num_vehicles: toInteger(line[2]), avg_speed: toFloat(line[3]) })'\'', { batchSize: 10000, parallel: true });"
       }
    ]
 }' > request_body.json
