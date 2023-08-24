@@ -6,9 +6,11 @@ ENV NODE_ENV production
 
 ARG REACT_APP_EXPRESS_BASE_URL 
 ARG REACT_APP_EXPRESS_API_PREFIX
+ARG REACT_APP_UI_BASE_PREFIX
 
 ENV REACT_APP_EXPRESS_BASE_URL=${REACT_APP_EXPRESS_BASE_URL}
 ENV REACT_APP_EXPRESS_API_PREFIX=${REACT_APP_EXPRESS_API_PREFIX}
+ENV REACT_APP_UI_BASE_PREFIX=${REACT_APP_UI_BASE_PREFIX}
 
 # Setting up the work directory
 WORKDIR /app
@@ -29,7 +31,10 @@ FROM nginx:alpine
 EXPOSE 80
 
 # Copying built assets from builder
-COPY --from=builder /app/build /usr/share/nginx/html
+COPY --from=builder /app/build /usr/share/nginx/traffic-analyzer-web-app
 
 # Copying our nginx.conf
 COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+
+

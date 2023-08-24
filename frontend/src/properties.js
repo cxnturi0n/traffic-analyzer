@@ -1,6 +1,11 @@
 
-export const REACT_APP_EXPRESS_API_PREFIX = process.env.REACT_APP_EXPRESS_API_PREFIX || "/";
+export const REACT_APP_EXPRESS_API_PREFIX = process.env.REACT_APP_EXPRESS_API_PREFIX;
 
 export const REACT_APP_EXPRESS_BASE_URL = process.env.REACT_APP_EXPRESS_BASE_URL;
+
+export const REACT_APP_UI_BASE_PREFIX = process.env.REACT_APP_UI_BASE_PREFIX;
+
+
+
 
 

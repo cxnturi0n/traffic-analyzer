@@ -3,12 +3,13 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import Box from "@mui/material/Box";
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
+import { REACT_APP_UI_BASE_PREFIX } from "../properties";
 
 export default function BeginButton() {
   const navigate = useNavigate();
 
   const navigateToTrafficAnalyzer = () => {
-    navigate("/traffic-analyzer");
+    navigate(`${REACT_APP_UI_BASE_PREFIX}/query`);
   };
   return (
     <Box sx={{ "& > button": { m: 1 } }}>

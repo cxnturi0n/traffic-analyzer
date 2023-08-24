@@ -5,8 +5,9 @@ export default function errorMiddleware(error, req, res, next) {
       .json({
         status: 'error',
         code: error.code || 500,
-        message: error.message,
-        trace: error.trace,
-        details: error.details,
+        message: "Something went wrong"
+        // message: error.message,
+        // trace: error.trace,
+        // details: error.details,
       })
   }

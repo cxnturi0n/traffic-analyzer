@@ -27,6 +27,7 @@ server.use(rateLimit({ //max 20 requests per minute
 server.use(validateQueryParameters)
 server.use(errorMiddleware);
 
+
 neo4j.initDriver(env.NEO4J_URI, env.NEO4J_USERNAME, env.NEO4J_PASSWORD);
 
 postgres.initPool(

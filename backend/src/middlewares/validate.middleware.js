@@ -41,11 +41,9 @@ function validateQueryParameters(req, res, next) {
     );
   }
 
-  if (!granularity) {
-    throw new WrongQueryError("Granularity is required: Expected: 5 | 15 | 30");
-  }
-  if (granularity != 5 && granularity != 15 && granularity != 30) {
-    throw new WrongQueryError("Region is wrong. Expected: 5 | 15 | 30");
+
+  if (granularity && granularity != 5 && granularity != 15 && granularity != 30) {
+    throw new WrongQueryError("Granularity is wrong. Expected: 5 | 15 | 30");
   }
 
   const roadIdsPattern = /^\[\s*(?:[0-9]\s*(?:,\s*[0-9])*)?\]$/;
