@@ -18,7 +18,6 @@ export default function RegionSelector({ chooseRegion, chooseRoadCount }) {
   };
 
   useEffect(() => {
-    console.log(`${REACT_APP_EXPRESS_BASE_URL}${REACT_APP_EXPRESS_API_PREFIX}`, REACT_APP_EXPRESS_BASE_URL, REACT_APP_EXPRESS_API_PREFIX)
 
     if (!region || region.length === 0)
       return;

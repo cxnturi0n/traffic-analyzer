@@ -53,8 +53,6 @@ export default function App() {
     const observationEndpoint = "/roads/observations";
     const commonParams = `granularity=${granularity}&region=${region}&polygons=`;
 
-    console.log(baseRequest)
-
     if (query === "roads") {
       return `${baseRequest}/roads?region=${region}${getRoadIdsQuery()}&count=false`;
     } else if (query.includes("histogram") || query.includes("timeseries")) {
@@ -95,7 +93,6 @@ export default function App() {
     }
     const request = generateRequestUrl(query);
     setLoading(true);
-    console.log(request);
     const axiosInstance = axios.create({
       withCredentials: true, // Include credentials in requests (required by gitpod)
     });
@@ -103,7 +100,6 @@ export default function App() {
     axiosInstance
       .get(request)
       .then((response) => {
-        console.log(response);
         if (query.includes("roads")) {
           setRoadsToShow(response.data.map((road) => road.polygon));
         } else if (
@@ -112,7 +108,6 @@ export default function App() {
         ) {
           setObservations(response.data);
         } else if (query.includes("crowded") || query.includes("speed")) {
-          console.log(response.data);
           setRoads(response.data.roads);
           setObservations(response.data.observations);
           setRoadsToShow(response.data.roads.map((road) => road.polygon));

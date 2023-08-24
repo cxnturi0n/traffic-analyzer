@@ -19,7 +19,6 @@ export default function IntervalDateTimePicker({
 
   const handleBeginTimestampChange = (beginTimestamp) => {
     const beginTimestampUTC = beginTimestamp.utc(); 
-    console.log(Math.floor(beginTimestampUTC.$d.getTime() / 1000), beginTimestampUTC);
     setBeginTimestamp(beginTimestampUTC);
     chooseBeginTimestamp(Math.floor(beginTimestampUTC.$d.getTime() / 1000));
   };

@@ -15,13 +15,13 @@ import Welcome from "./components/Welcome";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route>
+    <Route path={`${REACT_APP_UI_BASE_PREFIX}/`}>
       <Route
-        path={`${REACT_APP_UI_BASE_PREFIX}/welcome`}
+        path={"welcome"}
         element={<Welcome />}
       />
       <Route
-        path={`${REACT_APP_UI_BASE_PREFIX}/query`}
+        path={"query"}
         element={<App />}
       />
     </Route>

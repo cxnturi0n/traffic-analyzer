@@ -12,7 +12,6 @@ class RoadsService {
     const justCount = req.query.count;
     const roadIds = req.query.roadIds;
     let ret = "";
-    console.log(justCount);
     if (justCount && justCount != "true") {
       let roadPolygons = "";
       if (roadIds && JSON.parse(roadIds).length > 0) {

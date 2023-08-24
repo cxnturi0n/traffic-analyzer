@@ -83,7 +83,6 @@ export default class ObservationsService {
 function getObservationsQueryWithFilters(params) {
   // Builds query to get observations based on the filters specified as query parameters in the request
 
-  console.log(params);
   let cypherQuery = `
     MATCH (o:Observation${params.region + "_" + params.granularity + "min"})
   `;
@@ -150,8 +149,6 @@ function getObservationsQueryWithFilters(params) {
   if (!params.type) {
     cypherQuery = addLimit(cypherQuery, params.limit);
   }
-
-  console.log(cypherQuery);
 
   return cypherQuery;
 }
