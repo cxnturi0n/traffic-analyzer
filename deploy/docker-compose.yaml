@@ -27,8 +27,8 @@ services:
       context: '../frontend'
       args:
         REACT_APP_EXPRESS_BASE_URL: http://localhost
-        REACT_APP_EXPRESS_API_PREFIX: /projects/traffic-analyzer/api
-        REACT_APP_UI_BASE_PREFIX: /projects/traffic-analyzer
+        REACT_APP_EXPRESS_API_PREFIX: /traffic-analyzer/api
+        REACT_APP_UI_BASE_PREFIX: /traffic-analyzer
     container_name: nginx_react
     ports:
       - "80:80"
