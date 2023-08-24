@@ -8,22 +8,15 @@ import {
   Route,
   RouterProvider,
   createBrowserRouter,
-  createRoutesFromElements
+  createRoutesFromElements,
 } from "react-router-dom";
 
 import Welcome from "./components/Welcome";
-
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path={`${REACT_APP_UI_BASE_PREFIX}/`}>
-      <Route
-        path={"welcome"}
-        element={<Welcome />}
-      />
-      <Route
-        path={"query"}
-        element={<App />}
-      />
+      <Route index element={<Welcome />} />
+      <Route path={`query`} element={<App />} />
     </Route>
   )
 );
@@ -34,4 +27,3 @@ root.render(
     <RouterProvider router={router} />
   </React.StrictMode>
 );
-

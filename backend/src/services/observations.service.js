@@ -108,10 +108,6 @@ function getObservationsQueryWithFilters(params) {
     cypherQuery = addDaysOfWeekFilter(cypherQuery, params.days, "o.timestamp");
   }
 
-  if (params.region) {
-    cypherQuery = addFilter(cypherQuery, `o.region = $region`);
-  }
-
   const typeToObservationField = {
     "most-crowded": "sum_vehicles",
     "least-crowded": "sum_vehicles",
@@ -181,7 +177,6 @@ return Array.from(uniqueRoadIds);
 function getNeo4jQueryPlaceholders(params) {
 // Neo4j query placeholders to counter SQL injections
 return {
-  region: params.region,
   roadIds: params.roadIds ? JSON.parse(params.roadIds) : undefined,
   tbegin: params.tbegin ? neo4j.int(params.tbegin) : undefined,
   tend: params.tend ? neo4j.int(params.tend) : undefined,
