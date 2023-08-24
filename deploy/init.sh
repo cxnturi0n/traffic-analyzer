@@ -58,12 +58,10 @@ run_command docker compose up -d
 echo "Waiting 10 seconds for databases to boot..."
 sleep 10
 
-# Run init-postgis.sh
 echo "Initializing PostGIS..."
 run_command chmod +x init-postgis.sh
 run_command ./init-postgis.sh
 
-# Run init-neo4j.sh
 echo "Initializing Neo4j..."
 run_command chmod +x init-neo4j.sh
 run_command ./init-neo4j.sh
