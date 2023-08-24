@@ -34,7 +34,7 @@ EXPOSE 80
 COPY --from=builder /app/build /usr/share/nginx/traffic-analyzer-web-app
 
 # Copying our nginx.conf
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY ../deploy/nginx.conf /etc/nginx/conf.d/default.conf
 
 
 
