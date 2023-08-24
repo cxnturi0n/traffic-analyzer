@@ -63,7 +63,7 @@ echo "Initializing PostGIS..."
 run_command chmod +x init-postgis.sh
 run_command ./init-postgis.sh
 
-Run init-neo4j.sh
+# Run init-neo4j.sh
 echo "Initializing Neo4j..."
 run_command chmod +x init-neo4j.sh
 run_command ./init-neo4j.sh
