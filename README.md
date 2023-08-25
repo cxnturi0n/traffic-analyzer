@@ -21,5 +21,6 @@ The dataset you will use is a modified version that tracks truck traffic on majo
 - Script for data download and loading
 - User Interface code (Optional)
 
-## Architecture overview
-You can perform some basic spatial and temporal traffic analysis through a simple web interface you can access from your favourite browser. The web page fetches the data needed via an api that will be discussed later, that is empowered by express, which is a backend web application framework for building RESTful APIs with Node.js. Express queries PostGIS for road geometries and Neo4j for road observations, filtering outcomes based on user-specified filters. Here is an image representing the architecture implemented:
+## Overview
+You can perform some basic spatial and temporal traffic analysis through a simple web interface you can access from your favourite browser. The web page fetches the data needed via an api that will be discussed later, that is empowered by express, which is a backend web application framework for building RESTful APIs with Node.js. Express queries PostGIS for road geometries and Neo4j for road observations, filtering outcomes based on user-specified filters. Here is an image representing the software components involved:
+![Architecture](https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/2b98e1dc-1bd7-438d-964f-df422f1689c9)
