@@ -22,5 +22,21 @@ The dataset you will use is a modified version that tracks truck traffic on majo
 - User Interface code (Optional)
 
 ## Overview
-You can perform some basic spatial and temporal traffic analysis through a simple web interface you can access from your favourite browser. The web page fetches the data needed via an api that will be discussed later, that is empowered by express, which is a backend web application framework for building RESTful APIs with Node.js. Express queries PostGIS for road geometries and Neo4j for road observations, filtering outcomes based on user-specified filters. Here is an image representing the software components involved:
-![Architecture](https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/2b98e1dc-1bd7-438d-964f-df422f1689c9)
+You can either utilize a web interface or the api to conduct basic spatial and temporal analysis of traffic patterns. The web page is accessible through your preferred browser and retrieves necessary data via an API, which will be discussed in more detail later. This API is empowered by Express, a backend web application framework designed for creating RESTful APIs using Node.js. Express leverages PostGIS for road geometries and Neo4j for road observations. The system filters outcomes based on user-defined criteria.
+
+Several valuable insights can be derived from this system:
+
+- Display the visual representation of road geometries on a map, providing the option to filter roads based on their IDs.
+- Identify the least congested roads during specific time intervals on weekends.
+- Visualize the top-n roads with the highest speeds on Sundays.
+- Illustrate the probability distribution of speeds during the COVID-19 pandemic.
+- Present the probability distribution of vehicle counts for specific roads.
+- ...
+
+Here is an image representing the software components involved:
+![TrafficAnalyzer_Architecture](https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/67525f4c-29ac-4f09-8b13-95d1f27be0ae)
+
+
+## Postgis
+
+
