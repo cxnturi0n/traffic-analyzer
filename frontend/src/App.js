@@ -33,7 +33,7 @@ export default function App() {
 
   const [limit, setLimit] = useState(10);
 
-  const [granularity, setGranularity] = useState(15);
+  const [granularity, setGranularity] = useState(30);
 
   const [roadCount, setRoadCount] = useState(0);
 
