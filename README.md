@@ -1,6 +1,16 @@
-# traffic-analyzer
+<H2> Table of contents </H2>
+<ul>
+    <li><a href="#Introduction">Introduction</a></li>
+    <li><a href="#Specifications">Specifications</a></li>
+    <li><a href="#WebInterface">Web interface</a></li>
+    <li><a href="#ApiEndpoints">Api endpoints</a></li>
+    <li><a href="#Neo4j">Neo4j</a></li>
+    <li><a href="#Postgis">Postgis</a></li>
+    <li><a href="#TryIt">Try it</a></li>
+</ul>
+<H2 id="Introduction">Introduction</H2>
 A simple React web application designed for traffic analysis, linked to an Express server that retrieves road geometries from PostGIS and gathers observations from Neo4j. This project was created as part of the NoSQL course within the Computer Science Master's Degree program at the University of Naples Federico II.
-## Specifications
+<H2 id="Specifications">Specifications</H2>
 Since 2016, in Belgium, a maximum threshold (3.5 tons) has been imposed on the weight of trucks circulating on highways. Those exceeding this threshold must pay an additional toll for each kilometer traveled. For this purpose, the installation of an On-Board Unit (OBU) on the affected vehicles (approximately 140,000) has been made mandatory for monitoring movements. Each OBU sends a message approximately every 30 seconds.
 
 Each line in the original dataset contains an ID (anonymously reset every day at 2 AM UTC), a timestamp, GPS coordinates (latitude, longitude), speed, and direction.
@@ -11,17 +21,15 @@ The dataset you will use is a modified version that tracks truck traffic on majo
 
 2) JSON files containing the geometries of the considered roads.
 
-### Task
+<H3 id="Task">Task</H2>
 
 **Develop a system for the storage and spatiotemporal analysis of traffic conditions, with data visualization on a map. The underlying DBMS must necessarily be a hybrid composed of two systems: the first will be Neo4j, while the choice of the second is left to the group members.**
 
-### Deliverable
-
-- Documentation (each choice must be documented and justified)
+<H3 id="Deliverable">Deliverable</H2>
 - Script for data download and loading
 - User Interface code (Optional)
 
-## Overview
+<H2 id="Overview">Overview</H2>
 You can either utilize a web interface or the api to conduct basic spatial and temporal analysis of traffic patterns. The web page is accessible through your preferred browser and retrieves necessary data via an API, which will be discussed in more detail later. This API is empowered by Express, a backend web application framework designed for creating RESTful APIs using Node.js. Express leverages PostGIS for road geometries and Neo4j for road observations. The system filters outcomes based on user-defined criteria.
 
 Several valuable insights can be derived from this system, like for example:
@@ -37,13 +45,19 @@ Here is an image representing the software components involved:
 ![Architecture](https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/67525f4c-29ac-4f09-8b13-95d1f27be0ae)
 
 
-## Web Interface
+<H2 id="WebInterface">Web Interface</H2>
 The user interface is a Single Page Application, entirely created using ReactJS, a JavaScript library that facilitates the construction of user interfaces through component-based development. While I'm not an expert nor a fan of frontend development, my intention was to offer you a more straightforward and yet simple approach to conducting traffic analysis without the need to directly interact with raw APIs. Maps are integrated using Leaflet React components. Here is a usage example:
 
 https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/7be0c789-cb33-456c-8204-c5e6f0ac1656
 
+</H2>
+To demonstrate the software in action to the professors, I'm presenting two approaches. 
 
-## API Endpoints
+### Deploy locally through docker compose
+Although a bit more complex, grants you complete control over the involved services. This includes accessing the webpage, the API, PGAdmin (if uncommented from the docker-compose file), and the Neo4j web interface. To proceed with this approach, you should be equipped with a Linux environment containing Docker, as the initialization scripts require it. I have successfully tested it on both AMD64 and ARM64 architectures.
+
+The `deploy/install.sh` script handles the following tasks:
+<H2 id="ApiEndpoints">Api Endpoints</H2>
 
 ### 1. Get Road Polygons
 
@@ -118,7 +132,7 @@ https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/7be0c789-cb33-456c
 - **Example:**
   - Obtain average speeds in Brussels using a 5-minute granularity dataset, with observations limited to 30000: `/traffic-analyzer/api/roads/observations/avg-speeds?region=Bruxelles&granularity=5&limit=30000`
 
-## Neo4j
+<H2 id="Neo4j">Neo4j</H2>
 As per the project specifications, the recorded data from the On-Board Units (OBU) installed on freight transportation vehicles needed to be stored in Neo4j. The dataset contains observations from three distinct regions: Anderlecht, Brussels, and Belgium. Each region comprises nine CSV files. Among these, three CSV files encompass observations spanning 2019/01/01 to 2019/01/03, with varying time granularities: 5, 15, and 30 minutes. An additional set of three CSV files contains observations between 2021/03/13 and 2021/06/06, again with differing time granularities. Lastly, the remaining three CSV files hold observations from 2021/06/05 to 2021/10/16, across the same range of time granularities. To persist this data I decided to create 9 different nodes. 3 nodes for each region, where each one of these contain observations over the 3 different intervals over a certain granularity. As an example, in the next image you can see it just for Anderlecht csv files but the same logic is applied for other regions, substituting "Anderlecht" with another region name: 
 
 ![CsvToNodes](https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/da3c0af6-353b-4bdf-9314-ae27d8733898)
@@ -166,7 +180,7 @@ The Neo4j JavaScript Driver is among the five officially endorsed drivers, with 
 Since I'm not utilizing a cluster setup, I rely on a single instance of the driver, implemented through the Singleton Pattern.
 This driver establishes numerous TCP connections with the database. From this collection, a subset of connections are by sessions that are responsible for performing sequences of transactions. The driver additionally supports the use of placeholders in dinamic statements, to prevent sql injections. More details in the backend/src/databases/neo4j.database.js and backend/src/services/observations.service.js module.
 
-## Postgis
+<H2 id="Postgis">Postgis</H2>
 The database chosen for storing road geometries is PostGIS, which is an extension for PostgreSQL adding support storing, indexing and querying geographic data. I choose PostGIS as I was already familiar with PostgreSQL, and I did not have any other experience with other Geospatial databases.
 
 ### Loading
@@ -179,7 +193,7 @@ Since the geometries are stored in the form of GeoJSON, fetching road geometries
 ### Postgres Javascript driver
 Postgis is an extension of Postgres so I could use the simple and well documented Javascript driver. To avoid opening a connection for each request, I used the out of the box connection pool provided by the driver itself. More details here: backend/src/databases/postgres.databases.js.
 
-## Try it
+<H2 id="TryIt">Try it</H2>
 To demonstrate the software in action to the professors, I'm presenting two approaches. 
 
 ### Deploy locally through docker compose
@@ -207,6 +221,6 @@ Once done, you can access the following in your browser:
 - Neo4j UI: http://localhost:7474 (Use bolt protocol with credentials in neo4j.env)
 - PGAdmin UI: http://localhost:5555 (Credentials in pgadmin.env)
 
-### Directly try web UI
+### Directly try Web UI
 
-The second approach is the faster but just gives access to the web UI. Connect to https://projects.fabiocinicolo.dev/traffic-analyzer. It has been deployed on my raspberry pi, which of course will not guarantee you good performances due to its limited computational resources.
+The second approach is the faster but just gives access to the web UI. Connect to https://projects.fabiocinicolo.dev/traffic-analyzer. It has been deployed on my raspberry pi, which of course will not guarantee you good performances due to its limited computational resources and additionally could be offline sometimes for personal reasons.
