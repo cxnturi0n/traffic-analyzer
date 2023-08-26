@@ -180,7 +180,10 @@ Since the geometries are stored in the form of GeoJSON, fetching road geometries
 Postgis is an extension of Postgres so I could use the simple and well documented Javascript driver. To avoid opening a connection for each request, I used the out of the box connection pool provided by the driver itself. More details here: backend/src/databases/postgres.databases.js.
 
 ## Try it
-To demonstrate the software in action to the professors, I'm presenting two approaches. The first one, although a bit more complex, grants you complete control over the involved services. This includes accessing the webpage, the API, PGAdmin (if uncommented from the docker-compose file), and the Neo4j web interface. To proceed with this approach, you should be equipped with a Linux environment containing Docker, as the initialization scripts require it. I have successfully tested it on both AMD64 and ARM64 architectures.
+To demonstrate the software in action to the professors, I'm presenting two approaches. 
+
+### Deploy locally through docker compose
+Although a bit more complex, grants you complete control over the involved services. This includes accessing the webpage, the API, PGAdmin (if uncommented from the docker-compose file), and the Neo4j web interface. To proceed with this approach, you should be equipped with a Linux environment containing Docker, as the initialization scripts require it. I have successfully tested it on both AMD64 and ARM64 architectures.
 
 The `deploy/install.sh` script handles the following tasks:
 1. Installs necessary dependencies for launching services and loading data into the database. This involves tools like `ogr2ogr` from the GDAL package.
@@ -204,4 +207,6 @@ Once done, you can access the following in your browser:
 - Neo4j UI: http://localhost:7474 (Use bolt protocol with credentials in neo4j.env)
 - PGAdmin UI: http://localhost:5555 (Credentials in pgadmin.env)
 
-The second approach is the faster but just gives access to the web UI. Connect to https://projects.fabiocinicolo.dev/traffic-analyzer. It has been deployed over my raspberry pi4, which of course will not guarantee you to perform fast queries due to the weak microsd I currently have as storage.
+### Directly try web UI
+
+The second approach is the faster but just gives access to the web UI. Connect to https://projects.fabiocinicolo.dev/traffic-analyzer. It has been deployed on my raspberry pi, which of course will not guarantee you good performances due to its limited computational resources.
