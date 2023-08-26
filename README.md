@@ -126,7 +126,7 @@ As per the project specifications, the recorded data from the On-Board Units (OB
 
 ![CsvToNodes](https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/da3c0af6-353b-4bdf-9314-ae27d8733898)
 
-###Loading
+### Loading
 The automation of CSV file loading into Neo4j is done through the deploy/init-neo4j.sh script, check it out. This script employs the Bolt protocol, an application protocol over HTTP that enables the execution of database queries, specifically Cypher in this context. To enhance efficiency during insertion, mitigating memory issues and minimizing completion time, the 'apoc.periodic.iterate' function is adopted. This function enables batch inserts and the distribution of these inserts across multiple CPUs.
 
 An insertion statement invocation appears as follows:
@@ -151,5 +151,25 @@ To speed up queries involving this substantial dataset, specific indexes are est
 CREATE INDEX Index_ObservationAnderlecht_5min_road_id IF NOT EXISTS FOR (o:ObservationAnderlecht_5min) ON (o.road_id);
 CREATE INDEX Index_ObservationAnderlecht_5min_timestamp IF NOT EXISTS FOR (o:ObservationAnderlecht_5min) ON (o.timestamp);`
 
-###Cypher queries
-As you can see in the Api section, 
+### Cypher queries
+As you can see from the API Endpoints section, there are many queries that can be done, each with different combinations of parameters. Instead of having a separate function for each query combination and ending up with a lot of boilerplate code, I came up with a solution. In the backend/src/services/observations.service.js module, I designed a JavaScript function called 'getObservationsQueryWithFilters(params)' which is in charge of dynamically creating a specific Cypher query based on the given parameters.
+
+For instance, when the user wants to find the least crowded roads in the Anderlecht region during a certain time, using a 5-minute dataset, and limiting the results to 500, it would trigger the browser to perform an HTTP request to this URI: /traffic-analyzer/api/roads/observations?type=least-crowded&region=Anderlecht&tbegin=1565812380&tend=1640463600&granularity=5. The function 'getObservationsQueryWithFilters(params)' would then generate this query:
+`
+MATCH (o:ObservationAnderlecht_5min)
+WHERE o.timestamp >= 1565812380 AND o.timestamp < 1640463600 WITH o.road_id AS road_id, SUM(o.num_vehicles) AS sum_vehicles
+ORDER BY sum_vehicles ASC 
+LIMIT 500 
+RETURN road_id ,sum_vehicles
+`
+This query will finally be executed by a neo4j driver session inside a read transaction and return the requested observations.
+
+### Neo4j driver
+The Neo4j JavaScript Driver is among the five officially endorsed drivers, with the other options encompassing Java, .NET, Python, and Go. I opted for this particular driver due to my requirement for a straightforward and efficient means of interacting with Neo4j, especially within a backend framework like Node.js. This choice was made to avoid the potentially complex initial setup of alternatives such as Spring Boot. Although my confidence in JavaScript is not as strong as it is in Java, I proceeded with this decision.
+Since I'm not utilizing a cluster setup, I rely on a single instance of the driver, implemented through the Singleton Pattern, as shown in the backend/databases/neo4j.database.js module.
+This driver establishes numerous TCP connections with the database. From this collection, a subset of connections can be borrowed by sessions that are responsible for performing sequences of transactions. In substance, this driver allowed me to ignore the intricacies of handling underlying resources like pools of database connections, so that I could focus on the business logic.
+
+## Postgis
+
+
+
