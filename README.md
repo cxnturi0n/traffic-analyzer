@@ -161,7 +161,7 @@ RETURN road_id ,sum_vehicles
 `
 This query will finally be executed by a neo4j driver session inside a read transaction and return the requested observations.
 
-### Neo4j driver
+### Neo4j Javascript driver
 The Neo4j JavaScript Driver is among the five officially endorsed drivers, with the other options encompassing Java, .NET, Python, and Go. I opted for this particular driver due to my requirement for a straightforward, secure and efficient means of interacting with Neo4j, especially within a backend framework like Node.js. This choice was made to avoid the potentially complex initial setup of alternatives such as Spring Boot. Although my confidence in JavaScript is not as strong as it is in Java, I proceeded with this decision.
 Since I'm not utilizing a cluster setup, I rely on a single instance of the driver, implemented through the Singleton Pattern.
 This driver establishes numerous TCP connections with the database. From this collection, a subset of connections are by sessions that are responsible for performing sequences of transactions. The driver additionally supports the use of placeholders in dinamic statements, to prevent sql injections. More details in the backend/src/databases/neo4j.database.js and backend/src/services/observations.service.js module.
@@ -176,4 +176,32 @@ Geometries loading is automatized using deploy/init-postgis.sh script. It levera
 ### Postgres queries
 Since the geometries are stored in the form of GeoJSON, fetching road geometries through a query is quite simple. For instance, to extract geometries related to Anderlecht, the following query is executed: `SELECT ogc_fid AS road_id, ST_AsGeoJSON(wkb_geometry) AS polygons FROM anderlecht_streets`. The result of this query is an array of pairs that hold road IDs along with their corresponding geometries, specifically polygons. Each polygon is represented as an array of latitude and longitude coordinates.
 
+### Postgres Javascript driver
+Postgis is an extension of Postgres so I could use the simple and well documented Javascript driver. To avoid opening a connection for each request, I used the out of the box connection pool provided by the driver itself. More details here: backend/src/databases/postgres.databases.js.
 
+## Try it
+To demonstrate the software in action to the professors, I'm presenting two approaches. The first one, although a bit more complex, grants you complete control over the involved services. This includes accessing the webpage, the API, PGAdmin (if uncommented from the docker-compose file), and the Neo4j web interface. To proceed with this approach, you should be equipped with a Linux environment containing Docker, as the initialization scripts require it. I have successfully tested it on both AMD64 and ARM64 architectures.
+
+The `deploy/install.sh` script handles the following tasks:
+1. Installs necessary dependencies for launching services and loading data into the database. This involves tools like `ogr2ogr` from the GDAL package.
+2. Downloads road geometries and OBU CSV files from my personal Google Drive.
+3. Builds the Docker image for the React webpage along with the NGINX web server.
+4. Builds the Docker image for the Node.js Express server.
+5. Pulls Docker images for Neo4j, PostGIS, and optionally PGAdmin.
+6. Initiates Docker containers in detached mode.
+7. Executes the `init-postgis.sh` script to convert road geometries into GeoJSON format and loads them into PostGIS.
+8. Executes the `init-neo4j.sh` script to load CSV files into Neo4j.
+
+If I have convinced you that I will not install any malware on your machine you can follow these simple steps to install:
+
+1. Clone the repository: `git clone https://github.com/cxnturi0n/traffic-analyzer.git`
+2. Navigate to the deploy directory: `cd traffic-analyzer/deploy`
+3. Provide execute permissions to the `install.sh` script: `chmod u+x install.sh`
+4. Run the script: `./install.sh`
+
+Once done, you can access the following in your browser:
+- React UI: http://localhost/traffic-analyzer
+- Neo4j UI: http://localhost:7474 (Use bolt protocol with credentials in neo4j.env)
+- PGAdmin UI: http://localhost:5555 (Credentials in pgadmin.env)
+
+The second approach is the faster but just gives access to the web UI. Connect to https://projects.fabiocinicolo.dev/traffic-analyzer. It has been deployed over my raspberry pi4, which of course will not guarantee you to perform fast queries due to the weak microsd I currently have as storage.
