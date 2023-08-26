@@ -54,6 +54,7 @@ The user interface is a Single Page Application, entirely created using ReactJS,
 https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/7be0c789-cb33-456c-8204-c5e6f0ac1656
 
 <H2 id="ApiEndpoints">Api Endpoints</H2>
+
 The API is empowered by Express, a backend web application framework designed for creating RESTful APIs using Node.js. [Here](backend/server.js) is the source code of the server entrypoint. Here is an overview of the endpoints with the available query parameters:
 
 ### 1. Get Road Polygons
