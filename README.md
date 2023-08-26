@@ -24,24 +24,21 @@ The dataset you will use is a modified version that tracks truck traffic on majo
 ## Overview
 You can either utilize a web interface or the api to conduct basic spatial and temporal analysis of traffic patterns. The web page is accessible through your preferred browser and retrieves necessary data via an API, which will be discussed in more detail later. This API is empowered by Express, a backend web application framework designed for creating RESTful APIs using Node.js. Express leverages PostGIS for road geometries and Neo4j for road observations. The system filters outcomes based on user-defined criteria.
 
-Several valuable insights can be derived from this system:
+Several valuable insights can be derived from this system, like for example:
 
 - Display the visual representation of road geometries on a map, providing the option to filter roads based on their IDs.
 - Identify the least congested roads during specific time intervals on weekends.
 - Visualize the top-n roads with the highest speeds on Sundays.
 - Illustrate the probability distribution of speeds during the COVID-19 pandemic.
 - Present the probability distribution of vehicle counts for specific roads.
-- ...
+- ... 
 
 Here is an image representing the software components involved:
 ![Architecture](https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/67525f4c-29ac-4f09-8b13-95d1f27be0ae)
 
 
-
-
-
 ## Web Interface
-The user interface is a Single Page Application, entirely created using ReactJS, a JavaScript library that facilitates the construction of user interfaces through component-based development. While I'm not an expert in frontend development, my intention was to offer you a more straightforward approach to conducting traffic analysis without the need to directly interact with raw APIs. Here is a usage example:
+The user interface is a Single Page Application, entirely created using ReactJS, a JavaScript library that facilitates the construction of user interfaces through component-based development. While I'm not an expert nor a fan of frontend development, my intention was to offer you a more straightforward and yet simple approach to conducting traffic analysis without the need to directly interact with raw APIs. Maps are integrated using Leaflet React components. Here is a usage example:
 
 https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/7be0c789-cb33-456c-8204-c5e6f0ac1656
 
@@ -165,11 +162,18 @@ RETURN road_id ,sum_vehicles
 This query will finally be executed by a neo4j driver session inside a read transaction and return the requested observations.
 
 ### Neo4j driver
-The Neo4j JavaScript Driver is among the five officially endorsed drivers, with the other options encompassing Java, .NET, Python, and Go. I opted for this particular driver due to my requirement for a straightforward and efficient means of interacting with Neo4j, especially within a backend framework like Node.js. This choice was made to avoid the potentially complex initial setup of alternatives such as Spring Boot. Although my confidence in JavaScript is not as strong as it is in Java, I proceeded with this decision.
+The Neo4j JavaScript Driver is among the five officially endorsed drivers, with the other options encompassing Java, .NET, Python, and Go. I opted for this particular driver due to my requirement for a straightforward, secure and efficient means of interacting with Neo4j, especially within a backend framework like Node.js. This choice was made to avoid the potentially complex initial setup of alternatives such as Spring Boot. Although my confidence in JavaScript is not as strong as it is in Java, I proceeded with this decision.
 Since I'm not utilizing a cluster setup, I rely on a single instance of the driver, implemented through the Singleton Pattern.
-This driver establishes numerous TCP connections with the database. From this collection, a subset of connections are by sessions that are responsible for performing sequences of transactions. More details in the backend/src/databases/neo4j.database.js module.
+This driver establishes numerous TCP connections with the database. From this collection, a subset of connections are by sessions that are responsible for performing sequences of transactions. The driver additionally supports the use of placeholders in dinamic statements, to prevent sql injections. More details in the backend/src/databases/neo4j.database.js and backend/src/services/observations.service.js module.
 
 ## Postgis
+The database chosen for storing road geometries is PostGIS, which is an extension for PostgreSQL adding support storing, indexing and querying geographic data. I choose PostGIS as I was already familiar with PostgreSQL, and I did not have any other experience with other Geospatial databases.
 
+### Loading
+Geometries loading is automatized using deploy/init-postgis.sh script. It leverages ogr2ogr utility from the Gdal package. The process was not straightforward. Geometries present in the dataset jsons were in CRS84 format, which represent polygon coordinates as a pairs of this type (<longitude>, <latitude>). Leaflet react components expect coordinates to be pairs of this type (<latitude>,<longitude>). Instead of performing the swaps on the backend or directly in the browser, causing performances issues, I switched the latitude and longitude fields of every road polygon in the jsons before performing the insert, using a simple python script that you can find here: deploy/swap_coordinates.py. It converts the CRS84 to a valid GeoJSON using WGS84 as coordinate reference system. After the conversion data is loaded using ogr2ogr. I am not sure if there is a way to perform this conversion directly with ogr2ogr though. Here is an example of loading of the Anderlecht geoJson into the database:
+`ogr2ogr -f "PostgreSQL" "PG:dbname=belgium_road_network user=postgres password=password host=192.168.1.130" "Anderlecht_streets.geojson" -nln "anderlecht_streets" -nlt "POLYGON"`
+
+### Postgres queries
+Since the geometries are stored in the form of GeoJSON, fetching road geometries through a query is quite simple. For instance, to extract geometries related to Anderlecht, the following query is executed: `SELECT ogc_fid AS road_id, ST_AsGeoJSON(wkb_geometry) AS polygons FROM anderlecht_streets`. The result of this query is an array of pairs that hold road IDs along with their corresponding geometries, specifically polygons. Each polygon is represented as an array of latitude and longitude coordinates.
 
 
