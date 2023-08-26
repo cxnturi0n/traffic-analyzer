@@ -54,7 +54,7 @@ The user interface is a Single Page Application, entirely created using ReactJS,
 https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/7be0c789-cb33-456c-8204-c5e6f0ac1656
 
 <H2 id="ApiEndpoints">Api Endpoints</H2>
-The API is empowered by Express, a backend web application framework designed for creating RESTful APIs using Node.js. Here is an overview of the endpoints with the available query parameters:
+The API is empowered by Express, a backend web application framework designed for creating RESTful APIs using Node.js. [Here](backend/server.js) is the source code of the server entrypoint. Here is an overview of the endpoints with the available query parameters:
 
 ### 1. Get Road Polygons
 
@@ -186,10 +186,16 @@ The database chosen for storing road geometries is PostGIS, which is an extensio
 
 ### Loading
 Geometries loading is automatized using [deploy/init-postgis.sh](deploy/init-postgis.sh) script. It leverages ogr2ogr utility from the Gdal package. The process was not straightforward. Geometries present in the dataset jsons were in CRS84 format, which represent polygon coordinates as a pairs of this type (<longitude>, <latitude>). Leaflet react components expect coordinates to be pairs of this type (<latitude>,<longitude>). Instead of performing the swaps on the backend or directly in the browser, causing performances issues, I switched the latitude and longitude fields of every road polygon in the jsons before performing the load on the database, using the following python script [deploy/swap_coordinates.py](deploy/swap_coordinates.py). It converts the CRS84 to a valid GeoJSON using WGS84 as coordinate reference system. After the conversion data is loaded using ogr2ogr. I am not sure if there is a way to perform this conversion directly with ogr2ogr though. Here is an example of loading the Anderlecht geoJson into the database:
-`ogr2ogr -f "PostgreSQL" "PG:dbname=belgium_road_network user=postgres password=password host=192.168.1.130" "Anderlecht_streets.geojson" -nln "anderlecht_streets" -nlt "POLYGON"`
+```
+ogr2ogr -f "PostgreSQL" "PG:dbname=belgium_road_network user=postgres password=password host=192.168.1.130" "Anderlecht_streets.geojson" -nln "anderlecht_streets" -nlt "POLYGON"
+```
 
 ### Postgres queries
-Since the geometries are stored in the form of GeoJSON, fetching road geometries through a query is quite simple. For instance, to extract geometries related to Anderlecht, the following query is executed: `SELECT ogc_fid AS road_id, ST_AsGeoJSON(wkb_geometry) AS polygons FROM anderlecht_streets`. The result of this query is an array of pairs that hold road IDs along with their corresponding geometries, specifically polygons. Each polygon is represented as an array of latitude and longitude coordinates.
+Since the geometries are stored in the form of GeoJSON, fetching road geometries through a query is quite simple. For instance, to extract geometries related to Anderlecht, the following query is executed:
+```
+SELECT ogc_fid AS road_id, ST_AsGeoJSON(wkb_geometry) AS polygons FROM anderlecht_streets;
+```
+ The result of this query is an array of pairs that hold road IDs along with their corresponding geometries, specifically polygons. Each polygon is represented as an array of latitude and longitude coordinates.
 
 ### Postgres Javascript driver
 Postgis is an extension of Postgres so I could use the simple and well documented Javascript driver. To avoid opening a connection for each request, I used the out of the box connection pool provided by the driver itself. More details here: [backend/src/databases/postgres.databases.js](backend/src/databases/postgres.database.js).
@@ -204,7 +210,7 @@ Although a bit more complex, grants you complete control over the involved servi
 
 
 The containers are interconnected through a Docker network bridge called *deploy_default* This arrangement facilitates communication between the containers, employing their individual container names as hostnames. The Docker DNS (with the IP address 127.0.1.11) resolves these names to the respective IP addresses of the containers.
-Within the setup, the "nginx_react" is composed of an nginx server along with the compiled react web interface. Nginx firstly acts as a web server, delivering the *index.html* file to user browsers when they access the webpage. Secondly, it acts as a reverse proxy, forwarding API requests initiated by the browser to the Express server. This Express server retrieves necessary data from the associated databases and subsequently responds with the relevant results. These responses are then processed by the browser to update various components such as the Leaflet map, graphs, or tables within the user interface.
+Within the setup, the *nginx_react* container is composed of an nginx server along with the compiled react web interface. Nginx firstly acts as a web server, delivering the *index.html* file to user browsers when they access the webpage. Secondly, it acts as a reverse proxy, forwarding API requests initiated by the browser to the Express server running inside *nodejs_express* container. This Express server retrieves necessary data from the associated databases, running in *neo4j* and *postgis* containers, and subsequently responds with the relevant results. These responses are then processed by the browser to update various html components such as the Leaflet map, graphs, or tables within the user interface.
 
 
 The [install.sh](deploy/install.sh) script handles the following tasks:
@@ -219,10 +225,22 @@ The [install.sh](deploy/install.sh) script handles the following tasks:
 
 If I have convinced you that I will not install any malware on your machine you can follow these simple steps to proceed with the installation:
 
-1. Clone the repository: `git clone https://github.com/cxnturi0n/traffic-analyzer.git`
-2. Navigate to the deploy directory: `cd traffic-analyzer/deploy`
-3. Provide execute permissions to the `install.sh` script: `chmod u+x install.sh`
-4. Run the script: `./install.sh`
+1. Clone the repository:
+```
+git clone https://github.com/cxnturi0n/traffic-analyzer.git
+```
+3. Navigate to the deploy directory:
+```
+cd traffic-analyzer/deploy
+```
+5. Provide execute permissions to the `install.sh` script:
+```
+chmod u+x install.sh
+```
+7. Run the script:
+```
+./install.sh
+```
 
 Once done, you can access the following in your browser:
 - React UI: http://localhost/traffic-analyzer
