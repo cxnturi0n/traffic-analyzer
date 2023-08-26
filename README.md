@@ -26,7 +26,7 @@ The dataset you will use is a modified version that tracks truck traffic on majo
 **Develop a system for the storage and spatiotemporal analysis of traffic conditions, with data visualization on a map. The underlying DBMS must necessarily be a hybrid composed of two systems: the first will be Neo4j, while the choice of the second is left to the group members.**
 
 ### Deliverable
-1. Documentation <br/><br/>
+1. Documentation (Each choice needs to be documented and justified) <br/><br/>
 2. Script for data download and loading <br/><br/>
 3. User Interface code (Optional)
 
