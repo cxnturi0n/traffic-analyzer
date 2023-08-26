@@ -122,7 +122,34 @@ https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/7be0c789-cb33-456c
   - Obtain average speeds in Brussels using a 5-minute granularity dataset, with observations limited to 30000: `/traffic-analyzer/api/roads/observations/avg-speeds?region=Bruxelles&granularity=5&limit=30000`
 
 ## Neo4j
-As per the project specifications, the recorded data from the On-Board Units (OBU) installed on freight transportation vehicles needed to be stored in Neo4j. The dataset contains observations from three distinct regions: Anderlecht, Brussels, and Belgium. Each region comprises nine CSV files. Among these, three CSV files encompass observations spanning 2019/01/01 to 2019/01/03, with varying time granularities: 5, 15, and 30 minutes. An additional set of three CSV files contains observations between 2021/03/13 and 2021/06/06, again with differing time granularities. Lastly, the remaining three CSV files hold observations from 2021/06/05 to 2021/10/16, across the same range of time granularities. To persist this data I decided to create 9 different nodes. 3 nodes for each region, where each one of these contain observations over the 3 different intervals over a certain granularity. As an example, in the next image you can see it just for Anderlecht csv files but the same logic is applied for other regions, substituting "Anderlecht" with region name: 
+As per the project specifications, the recorded data from the On-Board Units (OBU) installed on freight transportation vehicles needed to be stored in Neo4j. The dataset contains observations from three distinct regions: Anderlecht, Brussels, and Belgium. Each region comprises nine CSV files. Among these, three CSV files encompass observations spanning 2019/01/01 to 2019/01/03, with varying time granularities: 5, 15, and 30 minutes. An additional set of three CSV files contains observations between 2021/03/13 and 2021/06/06, again with differing time granularities. Lastly, the remaining three CSV files hold observations from 2021/06/05 to 2021/10/16, across the same range of time granularities. To persist this data I decided to create 9 different nodes. 3 nodes for each region, where each one of these contain observations over the 3 different intervals over a certain granularity. As an example, in the next image you can see it just for Anderlecht csv files but the same logic is applied for other regions, substituting "Anderlecht" with another region name: 
 
 ![CsvToNodes](https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/da3c0af6-353b-4bdf-9314-ae27d8733898)
 
+###Loading
+The automation of CSV file loading into Neo4j is done through the deploy/init-neo4j.sh script, check it out. This script employs the Bolt protocol, an application protocol over HTTP that enables the execution of database queries, specifically Cypher in this context. To enhance efficiency during insertion, mitigating memory issues and minimizing completion time, the 'apoc.periodic.iterate' function is adopted. This function enables batch inserts and the distribution of these inserts across multiple CPUs.
+
+An insertion statement invocation appears as follows:
+
+`
+CALL apoc.periodic.iterate(
+  "LOAD CSV FROM 'file:///And_05min_0101_0103_2019.csv' AS line
+   RETURN line",
+  "CREATE (o:ObservationAnderlecht_5min {
+     road_id: toInteger(line[1]),
+     region: 'Anderlecht',
+     timestamp: apoc.date.parse(line[0], 's', 'yyyy-MM-dd HH:mm:ss'),
+     num_vehicles: toInteger(line[2]),
+     avg_speed: toFloat(line[3])
+   })",
+  { batchSize: 10000, parallel: true });`
+
+  
+The first query loads batchSize lines from the csv and the second query is applied for each element in the batch, until the csv is over. By default if parallel is set to true, there will be 50 concurrent tasks performing the insert, but this value can be fine tuned setting the "concurrency" option to the value needed. I didn't really try to fine tune because on my pc the over reported configuration for loading Anderlecht observations (around 12 million nodes !) took me 2 minutes.
+
+To speed up queries involving this substantial dataset, specific indexes are established. Notably, RANGE indexes are implemented for attributes like timestamp and road_id. These indexes significantly enhance query performance. Here are the index creation statements for timestamp and road_id over ObservationAnderlecht_5min nodes:`
+CREATE INDEX Index_ObservationAnderlecht_5min_road_id IF NOT EXISTS FOR (o:ObservationAnderlecht_5min) ON (o.road_id);
+CREATE INDEX Index_ObservationAnderlecht_5min_timestamp IF NOT EXISTS FOR (o:ObservationAnderlecht_5min) ON (o.timestamp);`
+
+###Cypher queries
+As you can see in the Api section, 
