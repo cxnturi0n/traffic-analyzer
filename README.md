@@ -196,7 +196,14 @@ Postgis is an extension of Postgres so I could use the simple and well documente
 To demonstrate the software in action to the professors, I'm presenting two approaches. 
 
 ### Deploy locally through docker compose
-Although a bit more complex, grants you complete control over the involved services. This includes accessing the webpage, the API, PGAdmin (if uncommented from the docker-compose file), and the Neo4j web interface. To proceed with this approach, you should be equipped with a Linux environment containing Docker, as the initialization scripts require it. I have successfully tested it on both AMD64 and ARM64 architectures.
+Although a bit more complex, grants you complete control over the involved services. This includes accessing the webpage, the API, PGAdmin (if uncommented from the docker-compose file), and the Neo4j web interface. To proceed with this approach, you should be equipped with a Linux environment containing Docker, as the initialization scripts require it. I have successfully tested it on both AMD64 and ARM64 architectures. This is an image representing the Docker compose services: 
+
+
+![Docker](https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/56fd21e0-86ff-433d-85b7-a65deaf51c76)
+
+The containers are interconnected through a Docker network bridge called "deploy_default." This arrangement facilitates communication between the containers, employing their individual container names as hostnames. The Docker DNS (with the IP address 127.0.1.11) resolves these names to the respective IP addresses of the containers.
+Within the setup, the "nginx_react" is composed of an nginx server along with the compiled react web interface. Nginx firstly acts as a web server, delivering the "index.html" file to user browsers when they access the webpage. Secondly, it acts as a reverse proxy, forwarding API requests initiated by the browser to the Express server. This Express server retrieves necessary data from the associated databases and subsequently responds with the relevant results. These responses are then processed by the browser to update various components such as the Leaflet map, graphs, or tables within the user interface.
+
 
 The `deploy/install.sh` script handles the following tasks:
 1. Installs necessary dependencies for launching services and loading data into the database. This involves tools like `ogr2ogr` from the GDAL package.
