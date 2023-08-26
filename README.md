@@ -9,7 +9,7 @@
     <li><a href="#TryIt">Try it</a></li>
 </ul>
 <H2 id="Introduction">Introduction</H2>
-This project was created as part of the NoSQL course within the Computer Science Master's Degree program at the University of Naples Federico II. It consists  of a full stack web application designed for traffic analysis, with a web interface developed in ReactJS, linked to a Nodejs Express server that retrieves road geometries from PostGIS and gathers observations from Neo4j. 
+This project was created as part of the NoSQL course within the Computer Science Master's Degree program at the University of Naples Federico II. It consists of a minimal full stack web application designed for traffic analysis, with a web interface developed in ReactJS, linked to a Nodejs Express server that retrieves road geometries from PostGIS and gathers observations from Neo4j. 
 <H2 id="Specifications">Project Specifications</H2>
 Since 2016, in Belgium, a maximum threshold (3.5 tons) has been imposed on the weight of trucks circulating on highways. Those exceeding this threshold must pay an additional toll for each kilometer traveled. For this purpose, the installation of an On-Board Unit (OBU) on the affected vehicles (approximately 140,000) has been made mandatory for monitoring movements. Each OBU sends a message approximately every 30 seconds.
 
@@ -35,12 +35,12 @@ You can either utilize a web interface or the api to conduct basic spatial and t
 
 Several valuable insights can be derived from this system, like for example:
 
-- Display the visual representation of road geometries on a map, providing the option to filter roads based on their IDs.
-- Identify the least congested roads during specific time intervals on weekends.
-- Visualize the top-n roads with the highest speeds on Sundays.
-- Illustrate the probability distribution of speeds during the COVID-19 pandemic.
-- Present the probability distribution of vehicle counts for specific roads.
-- ... 
+- *Display the visual representation of road geometries on a map, providing the option to filter roads based on their IDs*.
+- *Identify the least congested roads during specific time intervals on weekends.*
+- *Visualize the top-n roads with the highest speeds on Sundays.*
+- *Illustrate the probability distribution of speeds during the COVID-19 pandemic.*
+- *Present the probability distribution of vehicle counts for specific roads.*
+- *...*
 
 
 Here is an image representing the software components involved:
@@ -130,13 +130,13 @@ The API is empowered by Express, a backend web application framework designed fo
   - Obtain average speeds in Brussels using a 5-minute granularity dataset, with observations limited to 30000: `/traffic-analyzer/api/roads/observations/avg-speeds?region=Bruxelles&granularity=5&limit=30000`
 
 <H2 id="Neo4j">Neo4j</H2>
-As per the project specifications, the recorded data from the On-Board Units (OBU) installed on freight transportation vehicles needed to be stored in Neo4j. The dataset contains observations from three distinct regions: Anderlecht, Brussels, and Belgium. Each region comprises nine CSV files. Among these, three CSV files encompass observations spanning 2019/01/01 to 2019/01/03, with varying time granularities: 5, 15, and 30 minutes. An additional set of three CSV files contains observations between 2021/03/13 and 2021/06/06, again with differing time granularities. Lastly, the remaining three CSV files hold observations from 2021/06/05 to 2021/10/16, across the same range of time granularities. To persist this data I decided to create 9 different nodes. 3 nodes for each region, where each one of these contain observations over the 3 different intervals over a certain granularity. As an example, in the next image you can see it just for Anderlecht csv files but the same logic is applied for other regions, substituting "Anderlecht" with another region name:
+As per the project specifications, the recorded data from the On-Board Units (OBU) installed on freight transportation vehicles needed to be stored in Neo4j. The dataset contains observations from three distinct regions: Anderlecht, Brussels, and Belgium. Each region comprises nine CSV files. Among these, three CSV files encompass observations spanning 2019/01/01 to 2019/01/03, with varying time granularities: 5, 15, and 30 minutes. An additional set of three CSV files contains observations between 2021/03/13 and 2021/06/06, again with differing time granularities. Lastly, the remaining three CSV files hold observations from 2021/06/05 to 2021/10/16, across the same range of time granularities. To persist this data I decided to create 9 different nodes. 3 nodes for each region, where each one of these contain observations over the 3 different intervals over a certain granularity. As an example, in the next image you can see it just for Anderlecht csv files but the same logic is applied for other regions, substituting *Anderlecht* with another region name:
 
 ![CsvsToNodes](https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/d3176a8f-dbb6-46ee-b126-8b09c7ee0e92)
 
 
 ### Loading
-The automation of CSV file loading into Neo4j is done through the deploy/init-neo4j.sh script, check it out. This script employs the Bolt protocol, an application protocol over HTTP that enables the execution of database queries, specifically Cypher in this context. To enhance efficiency during insertion, mitigating memory issues and minimizing completion time, the 'apoc.periodic.iterate' function is adopted. This function enables batch inserts and the distribution of these inserts across multiple CPUs.
+The automation of CSV file loading into Neo4j is done through the [init-neo4j.sh](deploy/init-neo4j.sh), check it out. This script employs the Bolt protocol, an application protocol over HTTP that enables the execution of database queries, specifically Cypher in this context. To enhance efficiency during insertion, mitigating memory issues and minimizing completion time, the `apoc.periodic.iterate` function is adopted. This function enables batch inserts and the distribution of these inserts across multiple CPUs.
 
 An insertion statement invocation appears as follows:
 
@@ -154,16 +154,16 @@ CALL apoc.periodic.iterate(
   { batchSize: 10000, parallel: true });`
 
   
-The first query loads batchSize lines from the csv and the second query is applied for each element in the batch, until the csv is over. By default if parallel is set to true, there will be 50 concurrent tasks performing the insert, but this value can be fine tuned setting the "concurrency" option to the value needed. I didn't really try to fine tune because on my pc the over reported configuration for loading Anderlecht observations (around 12 million nodes) took me 2 minutes.
+The first query loads *batchSize* lines from the csv and the second query is applied for each element in the batch, until the csv is over. By default if *parallel* is set to true, there will be 50 concurrent tasks performing the insert, but this value can be fine tuned setting the *concurrency* option to the value needed. I didn't really try to fine tune because on my pc the over reported configuration for loading Anderlecht observations (around 12 million nodes) took me 2 minutes.
 
-To speed up queries involving this substantial dataset, specific indexes are established. Notably, RANGE indexes are implemented for attributes like timestamp and road_id. These indexes significantly enhance query performance. Here are the index creation statements for timestamp and road_id over ObservationAnderlecht_5min nodes:`
+To speed up queries involving this substantial dataset, specific indexes are established. Notably, RANGE indexes are enforced for attributes like *timestamp* and *road_id*. These indexes significantly enhance query performance. Here are the index creation statements for timestamp and road_id over ObservationAnderlecht_5min nodes:`
 CREATE INDEX Index_ObservationAnderlecht_5min_road_id IF NOT EXISTS FOR (o:ObservationAnderlecht_5min) ON (o.road_id);
 CREATE INDEX Index_ObservationAnderlecht_5min_timestamp IF NOT EXISTS FOR (o:ObservationAnderlecht_5min) ON (o.timestamp);`
 
 ### Cypher queries
-As you can see from the API Endpoints section, there are many queries that can be done, each with different combinations of parameters. Instead of having a separate function for each query combination and ending up with a lot of boilerplate code, I came up with a solution. In the backend/src/services/observations.service.js module, I designed a JavaScript function called 'getObservationsQueryWithFilters(params)' which is in charge of dynamically creating a specific Cypher query based on the given parameters.
+As you can see from the API Endpoints section, there are many queries that can be done, each with different combinations of parameters. Instead of having a separate function for each query combination and ending up with a lot of boilerplate code, I came up with a solution. In the [backend/src/services/observations.service.js](backend/src/services/observations.service.js) module, I designed a JavaScript function called `getObservationsQueryWithFilters(params)` which is in charge of dynamically creating a specific Cypher query based on the given parameters.
 
-For instance, when the user wants to find the least crowded roads in the Anderlecht region during a certain time period, using a 5-minute dataset, and limiting the results to 500, it would trigger the browser to perform an HTTP request to this URI: /traffic-analyzer/api/roads/observations?type=least-crowded&region=Anderlecht&tbegin=1565812380&tend=1640463600&granularity=5. The function 'getObservationsQueryWithFilters(params)' would then generate this query:
+For instance, when the user wants to find the least crowded roads in the Anderlecht region during a certain time period, using a 5-minute dataset, and limiting the results to 500, it would trigger the browser to perform an HTTP request to this URI: `/traffic-analyzer/api/roads/observations?type=least-crowded&region=Anderlecht&tbegin=1565812380&tend=1640463600&granularity=5`. The function `getObservationsQueryWithFilters(params)` would then generate this query:
 `
 MATCH (o:ObservationAnderlecht_5min)
 WHERE o.timestamp >= 1565812380 AND o.timestamp < 1640463600 WITH o.road_id AS road_id, SUM(o.num_vehicles) AS sum_vehicles
@@ -176,35 +176,35 @@ This query will finally be executed by a neo4j driver session inside a read tran
 ### Neo4j Javascript driver
 The Neo4j JavaScript Driver is among the five officially supported drivers, with the other options encompassing Java, .NET, Python, and Go. I opted for this particular driver due to my requirement for a straightforward, secure and efficient means of interacting with Neo4j, especially within a backend framework like Node.js. This choice was made to avoid the potentially complex initial setup of alternatives such as Spring Boot. Although my confidence in JavaScript is not as strong as it is in Java, I proceeded with this decision.
 Since I'm not utilizing a cluster setup, I rely on a single instance of the driver, implemented through the Singleton Pattern.
-This driver establishes numerous TCP connections with the database. From this collection, a subset of connections are borrowed by sessions that are responsible for performing sequences of transactions. The driver additionally supports the use of placeholders in dinamic statements, to prevent sql injections. More details in the backend/src/databases/neo4j.database.js and backend/src/services/observations.service.js module.
+This driver establishes numerous TCP connections with the database. From this collection, a subset of connections are borrowed by sessions that are responsible for performing sequences of transactions. The driver additionally supports the use of placeholders in dinamic statements, to prevent sql injections. More details in the [backend/src/databases/neo4j.dhttps://github.com/cxnturi0n/traffic-analyzer/tree/main/frontend/srcatabase.js](backend/src/databases/neo4j.database.js) and [backend/src/services/observations.service.js](backend/src/services/observations.service.js) modules.
 
 <H2 id="Postgis">Postgis</H2>
 The database chosen for storing road geometries is PostGIS, which is an extension for PostgreSQL adding support storing, indexing and querying geographic data. I choose PostGIS as I was already familiar with PostgreSQL, and I did not have any other experience with other Geospatial databases.
 
 ### Loading
-Geometries loading is automatized using deploy/init-postgis.sh script. It leverages ogr2ogr utility from the Gdal package. The process was not straightforward. Geometries present in the dataset jsons were in CRS84 format, which represent polygon coordinates as a pairs of this type (<longitude>, <latitude>). Leaflet react components expect coordinates to be pairs of this type (<latitude>,<longitude>). Instead of performing the swaps on the backend or directly in the browser, causing performances issues, I switched the latitude and longitude fields of every road polygon in the jsons before performing the load on the database, using a simple python script that you can find here: deploy/swap_coordinates.py. It converts the CRS84 to a valid GeoJSON using WGS84 as coordinate reference system. After the conversion data is loaded using ogr2ogr. I am not sure if there is a way to perform this conversion directly with ogr2ogr though. Here is an example of loading the Anderlecht geoJson into the database:
+Geometries loading is automatized using [deploy/init-postgis.sh](deploy/init-postgis.sh) script. It leverages ogr2ogr utility from the Gdal package. The process was not straightforward. Geometries present in the dataset jsons were in CRS84 format, which represent polygon coordinates as a pairs of this type (<longitude>, <latitude>). Leaflet react components expect coordinates to be pairs of this type (<latitude>,<longitude>). Instead of performing the swaps on the backend or directly in the browser, causing performances issues, I switched the latitude and longitude fields of every road polygon in the jsons before performing the load on the database, using the following python script [deploy/swap_coordinates.py](deploy/swap_coordinates.py). It converts the CRS84 to a valid GeoJSON using WGS84 as coordinate reference system. After the conversion data is loaded using ogr2ogr. I am not sure if there is a way to perform this conversion directly with ogr2ogr though. Here is an example of loading the Anderlecht geoJson into the database:
 `ogr2ogr -f "PostgreSQL" "PG:dbname=belgium_road_network user=postgres password=password host=192.168.1.130" "Anderlecht_streets.geojson" -nln "anderlecht_streets" -nlt "POLYGON"`
 
 ### Postgres queries
 Since the geometries are stored in the form of GeoJSON, fetching road geometries through a query is quite simple. For instance, to extract geometries related to Anderlecht, the following query is executed: `SELECT ogc_fid AS road_id, ST_AsGeoJSON(wkb_geometry) AS polygons FROM anderlecht_streets`. The result of this query is an array of pairs that hold road IDs along with their corresponding geometries, specifically polygons. Each polygon is represented as an array of latitude and longitude coordinates.
 
 ### Postgres Javascript driver
-Postgis is an extension of Postgres so I could use the simple and well documented Javascript driver. To avoid opening a connection for each request, I used the out of the box connection pool provided by the driver itself. More details here: backend/src/databases/postgres.databases.js.
+Postgis is an extension of Postgres so I could use the simple and well documented Javascript driver. To avoid opening a connection for each request, I used the out of the box connection pool provided by the driver itself. More details here: [backend/src/databases/postgres.databases.js](backend/src/databases/postgres.databases.js).
 
 <H2 id="TryIt">Try it</H2>
 To demonstrate the software in action to the professors, I'm presenting two approaches. 
 
 ### Deploy locally through docker compose
-Although a bit more complex, grants you complete control over the involved services. This includes accessing the webpage, the API, PGAdmin (if uncommented from the docker-compose file), and the Neo4j web interface. To proceed with this approach, you should be equipped with a Linux environment containing Docker, as the initialization scripts require it. I have successfully tested it on both AMD64 and ARM64 architectures. This is an image representing the Docker compose services: 
+Although a bit more complex, grants you complete control over the involved services. This includes accessing the webpage, the API, PGAdmin (if uncommented from the docker-compose file), and the Neo4j web interface. To proceed with this approach, you should be equipped with a Linux environment containing Docker, as the initialization scripts require it. I have successfully tested it on both AMD64 and ARM64 architectures. This is an image representing the [Docker Compose](deploy/docker-compose.yaml) containers: 
 
 ![Docker](https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/8f452d62-7d52-41fe-b2e9-0ba432846cef)
 
 
-The containers are interconnected through a Docker network bridge called "deploy_default." This arrangement facilitates communication between the containers, employing their individual container names as hostnames. The Docker DNS (with the IP address 127.0.1.11) resolves these names to the respective IP addresses of the containers.
-Within the setup, the "nginx_react" is composed of an nginx server along with the compiled react web interface. Nginx firstly acts as a web server, delivering the "index.html" file to user browsers when they access the webpage. Secondly, it acts as a reverse proxy, forwarding API requests initiated by the browser to the Express server. This Express server retrieves necessary data from the associated databases and subsequently responds with the relevant results. These responses are then processed by the browser to update various components such as the Leaflet map, graphs, or tables within the user interface.
+The containers are interconnected through a Docker network bridge called *deploy_default* This arrangement facilitates communication between the containers, employing their individual container names as hostnames. The Docker DNS (with the IP address 127.0.1.11) resolves these names to the respective IP addresses of the containers.
+Within the setup, the "nginx_react" is composed of an nginx server along with the compiled react web interface. Nginx firstly acts as a web server, delivering the *index.html* file to user browsers when they access the webpage. Secondly, it acts as a reverse proxy, forwarding API requests initiated by the browser to the Express server. This Express server retrieves necessary data from the associated databases and subsequently responds with the relevant results. These responses are then processed by the browser to update various components such as the Leaflet map, graphs, or tables within the user interface.
 
 
-The `deploy/install.sh` script handles the following tasks:
+The [install.sh](deploy/install.sh) script handles the following tasks:
 1. Installs necessary dependencies for launching services and loading data into the database. This involves tools like `ogr2ogr` from the GDAL package.
 2. Downloads road geometries and OBU CSV files from my personal Google Drive.
 3. Builds the Docker image for the React webpage along with the NGINX web server.
@@ -228,5 +228,5 @@ Once done, you can access the following in your browser:
 
 ### Directly try Web UI
 
-The second approach is the faster but just gives access to the web UI. Connect to https://projects.fabiocinicolo.dev/traffic-analyzer. It has been deployed on my raspberry pi, which of course will not guarantee you good performances due to its limited computational resources and additionally could be offline sometimes for personal reasons. As the storage is limited, I just loaded Anderlecht csvs, so you can only query observations over the Anderlecht region.
+The second approach is the faster but just gives access to the web UI. Connect to https://projects.fabiocinicolo.dev/traffic-analyzer. It has been deployed on my raspberry pi, which of course will not guarantee you good performances due to its limited computational resources and additionally could be offline sometimes for personal reasons. As the storage is limited, I just loaded Anderlecht csvs, so you can "only" query the 12 millions observations over the Anderlecht region.
 
