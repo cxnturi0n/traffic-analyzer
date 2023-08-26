@@ -74,10 +74,6 @@ export default class ObservationsService {
       await session.close();
     }
   }
-  
-
-
-
 }
 
 function getObservationsQueryWithFilters(params) {
