@@ -166,8 +166,8 @@ This query will finally be executed by a neo4j driver session inside a read tran
 
 ### Neo4j driver
 The Neo4j JavaScript Driver is among the five officially endorsed drivers, with the other options encompassing Java, .NET, Python, and Go. I opted for this particular driver due to my requirement for a straightforward and efficient means of interacting with Neo4j, especially within a backend framework like Node.js. This choice was made to avoid the potentially complex initial setup of alternatives such as Spring Boot. Although my confidence in JavaScript is not as strong as it is in Java, I proceeded with this decision.
-Since I'm not utilizing a cluster setup, I rely on a single instance of the driver, implemented through the Singleton Pattern, as shown in the backend/databases/neo4j.database.js module.
-This driver establishes numerous TCP connections with the database. From this collection, a subset of connections can be borrowed by sessions that are responsible for performing sequences of transactions. In substance, this driver allowed me to ignore the intricacies of handling underlying resources like pools of database connections, so that I could focus on the business logic.
+Since I'm not utilizing a cluster setup, I rely on a single instance of the driver, implemented through the Singleton Pattern.
+This driver establishes numerous TCP connections with the database. From this collection, a subset of connections are by sessions that are responsible for performing sequences of transactions. More details in the backend/src/databases/neo4j.database.js module.
 
 ## Postgis
 
