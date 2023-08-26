@@ -10,8 +10,8 @@
     <li><a href="#References">References</a></li>
 </ul>
 <H2 id="Introduction">Introduction</H2>
-A simple React web application designed for traffic analysis, linked to an Express server that retrieves road geometries from PostGIS and gathers observations from Neo4j. This project was created as part of the NoSQL course within the Computer Science Master's Degree program at the University of Naples Federico II.
-<H2 id="Specifications">Specifications</H2>
+This project was created as part of the NoSQL course within the Computer Science Master's Degree program at the University of Naples Federico II. It consists  of a full stack web application designed for traffic analysis, with a web interface developed in ReactJS, linked to a Nodejs Express server that retrieves road geometries from PostGIS and gathers observations from Neo4j. 
+<H2 id="Specifications">Project Specifications</H2>
 Since 2016, in Belgium, a maximum threshold (3.5 tons) has been imposed on the weight of trucks circulating on highways. Those exceeding this threshold must pay an additional toll for each kilometer traveled. For this purpose, the installation of an On-Board Unit (OBU) on the affected vehicles (approximately 140,000) has been made mandatory for monitoring movements. Each OBU sends a message approximately every 30 seconds.
 
 Each line in the original dataset contains an ID (anonymously reset every day at 2 AM UTC), a timestamp, GPS coordinates (latitude, longitude), speed, and direction.
@@ -43,12 +43,14 @@ Several valuable insights can be derived from this system, like for example:
 - Present the probability distribution of vehicle counts for specific roads.
 - ... 
 
+
 Here is an image representing the software components involved:
 ![Architecture](https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/67525f4c-29ac-4f09-8b13-95d1f27be0ae)
 
 
 <H2 id="WebInterface">Web Interface</H2>
 The user interface is a Single Page Application, entirely created using ReactJS, a JavaScript library that facilitates the construction of user interfaces through component-based development. While I'm not an expert nor a fan of frontend development, my intention was to offer you a more straightforward and yet simple approach to conducting traffic analysis without the need to directly interact with raw APIs. Maps are integrated using Leaflet React components. Here is a usage example:
+
 
 https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/7be0c789-cb33-456c-8204-c5e6f0ac1656
 
@@ -130,6 +132,7 @@ The API is empowered by Express, a backend web application framework designed fo
 
 <H2 id="Neo4j">Neo4j</H2>
 As per the project specifications, the recorded data from the On-Board Units (OBU) installed on freight transportation vehicles needed to be stored in Neo4j. The dataset contains observations from three distinct regions: Anderlecht, Brussels, and Belgium. Each region comprises nine CSV files. Among these, three CSV files encompass observations spanning 2019/01/01 to 2019/01/03, with varying time granularities: 5, 15, and 30 minutes. An additional set of three CSV files contains observations between 2021/03/13 and 2021/06/06, again with differing time granularities. Lastly, the remaining three CSV files hold observations from 2021/06/05 to 2021/10/16, across the same range of time granularities. To persist this data I decided to create 9 different nodes. 3 nodes for each region, where each one of these contain observations over the 3 different intervals over a certain granularity. As an example, in the next image you can see it just for Anderlecht csv files but the same logic is applied for other regions, substituting "Anderlecht" with another region name: 
+
 
 ![CsvToNodes](https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/da3c0af6-353b-4bdf-9314-ae27d8733898)
 
@@ -219,5 +222,5 @@ Once done, you can access the following in your browser:
 
 ### Directly try Web UI
 
-The second approach is the faster but just gives access to the web UI. Connect to https://projects.fabiocinicolo.dev/traffic-analyzer. It has been deployed on my raspberry pi, which of course will not guarantee you good performances due to its limited computational resources and additionally could be offline sometimes for personal reasons.
+The second approach is the faster but just gives access to the web UI. Connect to https://projects.fabiocinicolo.dev/traffic-analyzer. It has been deployed on my raspberry pi, which of course will not guarantee you good performances due to its limited computational resources and additionally could be offline sometimes for personal reasons. As the storage is limited, I just loaded Anderlecht csvs, so you can only query observations over the Anderlecht region.
 
