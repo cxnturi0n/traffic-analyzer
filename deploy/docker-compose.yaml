@@ -51,9 +51,8 @@ services:
   #   container_name: pgadmin4
   #   ports:
   #     - '5555:80'
-  #   environment:
-  #     - PGADMIN_DEFAULT_EMAIL=f.cinicolo@studenti.unina.it
-  #     - PGADMIN_DEFAULT_PASSWORD=password
+  #    env_file:
+  #     - ./pgadmin.env
   #   volumes:
   #     - pgadmin_data:/var/lib/pgadmin/data
   #   depends_on:
