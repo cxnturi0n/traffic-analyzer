@@ -157,9 +157,11 @@ CALL apoc.periodic.iterate(
   
 The first query loads *batchSize* lines from the csv and the second query is applied for each element in the batch, until the csv is over. By default if *parallel* is set to true, there will be 50 concurrent tasks performing the insert, but this value can be fine tuned setting the *concurrency* option to the value needed. I didn't really try to fine tune because on my pc the over reported configuration for loading Anderlecht observations (around 12 million nodes) took me 2 minutes.
 
-To speed up queries involving this substantial dataset, specific indexes are established. Notably, RANGE indexes are enforced for attributes like *timestamp* and *road_id*. These indexes significantly enhance query performance. Here are the index creation statements for timestamp and road_id over ObservationAnderlecht_5min nodes:```
+To speed up queries involving this substantial dataset, specific indexes are established. Notably, RANGE indexes are enforced for attributes like *timestamp* and *road_id*. These indexes significantly enhance query performance. Here are the index creation statements for timestamp and road_id over ObservationAnderlecht_5min nodes:
+```
 CREATE INDEX Index_ObservationAnderlecht_5min_road_id IF NOT EXISTS FOR (o:ObservationAnderlecht_5min) ON (o.road_id);
-CREATE INDEX Index_ObservationAnderlecht_5min_timestamp IF NOT EXISTS FOR (o:ObservationAnderlecht_5min) ON (o.timestamp);```
+CREATE INDEX Index_ObservationAnderlecht_5min_timestamp IF NOT EXISTS FOR (o:ObservationAnderlecht_5min) ON (o.timestamp);
+```
 
 ### Cypher queries
 As you can see from the API Endpoints section, there are many queries that can be done, each with different combinations of parameters. Instead of having a separate function for each query combination and ending up with a lot of boilerplate code, I came up with a solution. In the [backend/src/services/observations.service.js](backend/src/services/observations.service.js) module, I designed a JavaScript function called `getObservationsQueryWithFilters(params)` which is in charge of dynamically creating a specific Cypher query based on the given parameters.
