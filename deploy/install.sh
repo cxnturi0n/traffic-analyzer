@@ -59,11 +59,11 @@ echo "Waiting 10 seconds for databases to boot..."
 sleep 10 # If script fails here you need to increase this value to give time for neo4j to boot
 
 echo "Initializing PostGIS..."
-run_command chmod +x init-postgis.sh
+run_command chmod u+x init-postgis.sh
 run_command ./init-postgis.sh
 
 echo "Initializing Neo4j..."
-run_command chmod +x init-neo4j.sh
+run_command chmod u+x init-neo4j.sh
 run_command ./init-neo4j.sh
 
 echo "Setup completed successfully."
