@@ -210,7 +210,7 @@ Although a bit more complex, grants you complete control over the involved servi
 ![Docker](https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/8f452d62-7d52-41fe-b2e9-0ba432846cef)
 
 
-The containers are interconnected through a Docker network bridge called *deploy_default* This arrangement facilitates communication between the containers, employing their individual container names as hostnames. The Docker DNS (with the IP address 127.0.1.11) resolves these names to the respective IP addresses of the containers.
+The containers are interconnected through a Docker network bridge called *deploy_default*. This arrangement facilitates communication between the containers, employing their individual container names as hostnames. The Docker DNS (with the IP address 127.0.1.11) resolves these names to the respective IP addresses of the containers.
 Within the setup, the *nginx_react* container is composed of an nginx server along with the compiled react web interface. Nginx firstly acts as a web server, delivering the *index.html* file to user browsers when they access the webpage. Secondly, it acts as a reverse proxy, forwarding API requests initiated by the browser to the Express server running inside *nodejs_express* container. This Express server retrieves necessary data from the associated databases, running in *neo4j* and *postgis* containers, and subsequently responds with the relevant results. These responses are then processed by the browser to update various html components such as the Leaflet map, graphs, or tables within the user interface.
 
 
@@ -222,7 +222,7 @@ The [install.sh](deploy/install.sh) script handles the following tasks:
 5. Pulls Docker images for Neo4j, PostGIS, and optionally PGAdmin.
 6. Initiates Docker containers in detached mode.
 7. Executes the `init-postgis.sh` script to convert road geometries into GeoJSON format and loads them into PostGIS.
-8. Executes the `init-neo4j.sh` script to load CSV files into Neo4j.
+8. Executes the `init-neo4j.sh` script to load CSV files and indexes into Neo4j.
 
 If I have convinced you that I will not install any malware on your machine you can follow these simple steps to proceed with the installation:
 
