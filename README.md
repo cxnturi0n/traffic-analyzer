@@ -45,13 +45,13 @@ Several valuable insights can be derived from this system, like for example:
 
 Here is an image representing the software components involved:
 
-![Components](https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/8e4f6b98-f52d-45b9-b17b-ecd64e8a5e3e)
+![Components](https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/86949d35-5780-4129-b17b-1caba111a7ec)
 
 
 <H2 id="WebInterface">Web Interface</H2>
 The user interface is a Single Page Application, entirely created using ReactJS, a JavaScript library that facilitates the construction of user interfaces through component-based development. While I'm not an expert nor a fan of frontend development, my intention was to offer you a more straightforward and yet simple approach to conducting traffic analysis without the need to directly interact with raw APIs. Maps are integrated using Leaflet React components. Here is a usage example:
 
-https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/7be0c789-cb33-456c-8204-c5e6f0ac1656
+https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/2d6dfa43-c14a-4802-b0d6-d5caa3cedc01
 
 <H2 id="ApiEndpoints">Api Endpoints</H2>
 
@@ -134,8 +134,7 @@ The API is empowered by Express, a backend web application framework designed fo
 
 As per the project specifications, the recorded data from the On-Board Units (OBU) installed on freight transportation vehicles needed to be stored in Neo4j. The dataset contains observations from three distinct regions: Anderlecht, Brussels, and Belgium. Each region comprises nine CSV files. Among these, three CSV files encompass observations spanning 2019/01/01 to 2019/01/03, with varying time granularities: 5, 15, and 30 minutes. An additional set of three CSV files contains observations between 2021/03/13 and 2021/06/06, again with differing time granularities. Lastly, the remaining three CSV files hold observations from 2021/06/05 to 2021/10/16, across the same range of time granularities. To persist this data I decided to create 9 different nodes. 3 nodes for each region, where each one of these contain observations over the 3 different intervals over a certain granularity. As an example, in the next image you can see it just for Anderlecht csv files but the same logic is applied for other regions, substituting *Anderlecht* with another region name:
 
-![CsvsToNodes](https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/d3176a8f-dbb6-46ee-b126-8b09c7ee0e92)
-
+![CsvsToNodes](https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/68fff2b9-87d6-4a5c-8cbc-dba73fbc2fcb)
 
 ### Loading
 The automation of CSV file loading into Neo4j is done through the [init-neo4j.sh](deploy/init-neo4j.sh), check it out. This script employs the Bolt protocol, an application protocol over HTTP that enables the execution of database queries, specifically Cypher in this context. To enhance efficiency during insertion, mitigating memory issues and minimizing completion time, the `apoc.periodic.iterate` function is adopted. This function enables batch inserts and the distribution of these inserts across multiple CPUs.
@@ -208,7 +207,7 @@ To demonstrate the software in action to the professors, I'm presenting two appr
 ### Deploy locally through docker compose
 Although a bit more complex, grants you complete control over the involved services. This includes accessing the webpage, the API, PGAdmin (if uncommented from the docker-compose file), and the Neo4j web interface. To proceed with this approach, you should be equipped with a Linux environment containing Docker, as the initialization scripts require it. I have successfully tested it on both AMD64 and ARM64 architectures. This is an image representing the [Docker Compose](deploy/docker-compose.yaml) containers: 
 
-![Docker](https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/8f452d62-7d52-41fe-b2e9-0ba432846cef)
+![Docker](https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/cfa90653-50f6-4776-abf0-edc9d1265ad8)
 
 
 The containers are interconnected through a Docker network bridge called *deploy_default*. This arrangement facilitates communication between the containers, employing their individual container names as hostnames. The Docker DNS (with the IP address 127.0.1.11) resolves these names to the respective IP addresses of the containers.
