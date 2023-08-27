@@ -40,7 +40,7 @@ echo "Installing ogr2ogr..."
 run_command sudo apt-get update
 run_command sudo apt-get -y install gdal-bin
 
-echo "Deleting databases volumes"
+echo "Deleting databases volumes from possible previous install"
 run_command docker rm -f postgis
 run_command docker volume rm -f deploy_pg_data
 run_command docker rm -f neo4j
