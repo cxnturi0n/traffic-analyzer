@@ -28,9 +28,9 @@ server.use(validateQueryParameters)
 server.use(errorMiddleware);
 
 
-neo4j.initDriver(env.NEO4J_URI, env.NEO4J_USERNAME, env.NEO4J_PASSWORD);
+neo4j.initDriver(env.NEO4J_URI, env.NEO4J_USERNAME, env.NEO4J_PASSWORD); // Init neo4j driver
 
-postgres.initPool(
+postgres.initPool( // Init postgis driver
   env.POSTGRES_HOST,
   env.POSTGRES_PORT,
   env.POSTGRES_DATABASE,
@@ -38,6 +38,6 @@ postgres.initPool(
   env.POSTGRES_PASSWORD
 );
 
-server.listen(env.SERVER_PORT, function () {
+server.listen(env.SERVER_PORT, function () {  // Start serving
   console.log("Traffic analyzer express server listening on port", env.SERVER_PORT);
 });
