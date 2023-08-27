@@ -45,7 +45,7 @@ Several valuable insights can be derived from this system, like for example:
 
 Here is an image representing the software components involved:
 
-![Architecture](https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/67525f4c-29ac-4f09-8b13-95d1f27be0ae)
+![Components](https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/8e4f6b98-f52d-45b9-b17b-ecd64e8a5e3e)
 
 
 <H2 id="WebInterface">Web Interface</H2>
