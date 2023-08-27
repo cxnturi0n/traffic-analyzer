@@ -10,6 +10,7 @@ dayjs.extend(utc);
 
 const minDateTime = dayjs.utc("2019-01-01T00:00:00Z");
 const maxDateTime = dayjs.utc("2021-10-16T23:59:00Z");
+const defaultDateTime = dayjs.utc("2019-01-16T23:59:00Z");
 
 export default function IntervalDateTimePicker({
   chooseBeginTimestamp,
@@ -46,7 +47,7 @@ export default function IntervalDateTimePicker({
         minDate={beginTimestamp}
         maxDate={maxDateTime}
         label="End timestamp"
-        defaultValue={maxDateTime}
+        defaultValue={defaultDateTime}
         onChange={handleEndTimestampChange}
       />
     </LocalizationProvider>
