@@ -20,9 +20,9 @@ server.use(cors({
 
 server.use(env.API_PREFIX, serverRouter);
 server.use(helmet());
-server.use(rateLimit({ //max 20 requests per minute
+server.use(rateLimit({ // max 30 requests per minute
   windowMs: 1 * 60 * 1000,
-  max: 20,
+  max: 30,
 }))
 server.use(validateQueryParameters)
 server.use(errorMiddleware);
