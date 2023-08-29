@@ -1,5 +1,3 @@
-import { getPool } from "../databases/postgres.database.js";
-
 class RoadsService {
   pool;
 
@@ -7,65 +5,62 @@ class RoadsService {
     this.pool = pool;
   }
 
-  async get(req) {
-    const region = req.query.region.toLowerCase();
-    const justCount = req.query.count;
-    const roadIds = req.query.roadIds;
-    let ret = "";
-    if (justCount && justCount != "true") {
-      let roadPolygons = "";
-      if (roadIds && JSON.parse(roadIds).length > 0) {
-        const postgisGetSpecificRoadsPolygonsQuery = {
-          // Craft postgres query to get the roads present in the roadIds array.
-          text: getSpecificRoadsPolygonsQuery(region),
-          values: [JSON.parse(roadIds)], // Road ids will be read from postgres from placeholders to avoid SQL injections
-        };
-        roadPolygons = await getPool().query(
-          postgisGetSpecificRoadsPolygonsQuery
-        );
-      } else {
-        roadPolygons = await getPool().query(getRoadsPolygonsQuery(region));
-      }
-      ret = getPolygonCoords(roadPolygons.rows);
-    } else {
-      const roadCount = await getPool().query(
-        getRoadCount(region.toLowerCase())
-      );
-      ret = roadCount.rows;
-    }
+  async getRoadsCount(where) {
+    const query = getRoadsCount(where.region);
+    const roadsCount = await this.pool.query(query);
+    return roadsCount.rows[0].count;
+  }
 
-    return ret;
+  async getRoadGeometries(where) {
+    const queryText = where.roadIds
+      ? getRoadGeometriesQueryByRoadIds(where.region)
+      : getRoadGeometriesQuery(where.region);
+    const placeholders = where.roadIds ? where.roadIds : [];
+
+    const query = {
+      text: queryText,
+      values: [placeholders],
+    };
+
+    const roadGeometries = await this.pool.query(query);
+
+    const parsedGeometries = roadGeometries.rows.map((row) => {
+      const polygons = JSON.parse(row.polygons).coordinates.map(
+        (coordinates) => {
+          const linearRing = {
+            coordinates: coordinates.map((coordPair) => ({
+              latitude: coordPair[1],
+              longitude: coordPair[0],
+            })),
+          };
+          return {
+            rings: [linearRing],
+          };
+        }
+      );
+      return {
+        road_id: row.road_id,
+        polygons: polygons,
+      };
+    });
+
+    return parsedGeometries;
   }
 }
 
-function getPolygonCoords(records) {
-  return records.map((record) => {
-    return {
-      road_id: record.road_id,
-      polygon: JSON.parse(record.polygons).coordinates,
-    };
-  });
-}
-
-function getRoadsPolygonsQuery(region) {
+function getRoadGeometriesQuery(region) {
   const query = `SELECT ogc_fid AS road_id, ST_AsGeoJSON(wkb_geometry) AS polygons FROM ${region}_streets`;
   return query;
 }
 
-function getSpecificRoadsPolygonsQuery(region) {
+function getRoadGeometriesQueryByRoadIds(region) {
   const query = `SELECT ogc_fid AS road_id, ST_AsGeoJSON(wkb_geometry) AS polygons FROM ${region}_streets WHERE ogc_fid = ANY($1::int[])`;
   return query;
 }
 
-function getRoadCount(region) {
-  const query = `SELECT count(*) AS road_count FROM ${region}_streets`;
+function getRoadsCount(region) {
+  const query = `SELECT count(*) AS count FROM ${region}_streets`;
   return query;
 }
 
-export {
-  RoadsService,
-  getRoadsPolygonsQuery,
-  getSpecificRoadsPolygonsQuery,
-  getPolygonCoords,
-  getRoadCount,
-};
+export { RoadsService };

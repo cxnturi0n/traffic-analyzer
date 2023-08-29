@@ -1,36 +1,22 @@
-import errorMiddleware from "./src/middlewares/error.middleware.js";
-import { validateQueryParameters } from "./src/middlewares/validate.middleware.js";
+import { Neo4jGraphQL } from "@neo4j/graphql";
 import express from "express";
 import * as neo4j from "./src/databases/neo4j.database.js";
-import * as postgres from "./src/databases/postgres.database.js";
 import bodyParser from "body-parser";
-import { serverRouter } from "./src/routes/server.routes.js";
 import * as env from "./properties.js";
-import cors from "cors"
-import helmet from "helmet"
-import { rateLimit } from "express-rate-limit";
+import cors from "cors";
+import { expressMiddleware } from "@apollo/server/express4";
+import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
+import http from "http";
+import { ApolloServer } from "@apollo/server";
+import { observationResolvers } from "./src/graphql/resolvers.graphql.js";
+import { observationTypedefs } from "./src/graphql/typedefs.graphql.js";
+import * as postgres from "./src/databases/postgres.database.js";
 
-var server = express();
+var app = express();
 
-server.use(bodyParser.json());
-server.use(cors({
-  origin: env.ALLOW_ORIGIN_HEADER_REACT_WEBAPP, // Set the allowed origin to React Webapp origin
-  credentials: true, 
-}));
+const driver = neo4j.initDriver(env.NEO4J_URI, env.NEO4J_USERNAME, env.NEO4J_PASSWORD);
 
-server.use(env.API_PREFIX, serverRouter);
-server.use(helmet());
-server.use(rateLimit({ // max 30 requests per minute
-  windowMs: 1 * 60 * 1000,
-  max: 30,
-}))
-server.use(validateQueryParameters)
-server.use(errorMiddleware);
-
-
-neo4j.initDriver(env.NEO4J_URI, env.NEO4J_USERNAME, env.NEO4J_PASSWORD); // Init neo4j driver
-
-postgres.initPool( // Init postgis driver
+postgres.initPool(
   env.POSTGRES_HOST,
   env.POSTGRES_PORT,
   env.POSTGRES_DATABASE,
@@ -38,6 +24,23 @@ postgres.initPool( // Init postgis driver
   env.POSTGRES_PASSWORD
 );
 
-server.listen(env.SERVER_PORT, function () {  // Start serving
-  console.log("Traffic analyzer express server listening on port", env.SERVER_PORT);
+const neoSchema = new Neo4jGraphQL({
+  driver: driver,
+  typeDefs: observationTypedefs,
+  resolvers: observationResolvers,
 });
+
+const httpServer = http.createServer(app);
+
+const server = new ApolloServer({
+  schema: await neoSchema.getSchema(),
+  plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+});
+
+await server.start();
+
+app.use(env.API_PREFIX, cors(), bodyParser.json(), expressMiddleware(server));
+
+await new Promise((resolve) => httpServer.listen({ port: 8087 }, resolve));
+
+console.log(`🚀 Server ready at http://localhost:8087 🚀`);

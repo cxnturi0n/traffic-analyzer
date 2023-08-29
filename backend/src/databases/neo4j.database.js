@@ -2,12 +2,11 @@ import neo4j from "neo4j-driver";
 
 let driver;
 
-async function initDriver(uri, username, password) {
+function initDriver(uri, username, password) {
   driver = neo4j.driver(uri, neo4j.auth.basic(username, password), {
-    disableLosslessIntegers: true, // https://github.com/neo4j/neo4j-javascript-driver#a-note-on-numbers-and-the-integer-type
+    disableLosslessIntegers: true,
   });
-
-  await driver.getServerInfo(); //Allows server to fail if could not connect to neo4j
+  driver.getServerInfo(); // Allows server to fail if connection could not be established
 
   return driver;
 }
