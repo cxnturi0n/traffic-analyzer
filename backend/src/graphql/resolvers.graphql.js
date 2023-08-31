@@ -1,12 +1,12 @@
-import { getAggregateRoadNumVehicles, getAggregateRoadAvgSpeeds } from "../controllers/observations.controller.js";
-import { getRoadGeometries, getRoadsCount } from "../controllers/roads.controller.js";
+import { getObservations, getVehicleCountForEachRoad, getAverageSpeedForEachRoad } from "../controllers/observations.controller.js";
 
 const observationResolvers = {
   Query: {
-    aggregateRoadNumVehicles: getAggregateRoadNumVehicles,
-    aggregateRoadAvgSpeeds: getAggregateRoadAvgSpeeds,
-    roadGeometries: getRoadGeometries,
-    roadsCount: getRoadsCount
+    observations: getObservations,
+    vehicleCountForEachRoad: getVehicleCountForEachRoad,
+    averageSpeedForEachRoad: getAverageSpeedForEachRoad,
+    // roads: getRoads,
+    // roadsCount: getRoadsCount
   },
 };
 

@@ -1,6 +1,15 @@
 version: '3.8'
 services:
-
+  postgis:
+    image: postgis/postgis:15-3.3-alpine
+    # For arm64 build(raspberry pi4) -> image: ghcr.io/baosystems/postgis:15-3.3
+    container_name: postgis
+    ports:
+      - '5432:5432'
+    env_file:
+      - ./postgis.env 
+    volumes:
+      - pg_data:/var/lib/postgresql/data
   neo4j:
     image: neo4j:5.10.0-community-bullseye
     container_name: neo4j
@@ -12,17 +21,19 @@ services:
     volumes:
       - neo4j_data:/var/lib/neo4j/data
       - ./obu-data:/var/lib/neo4j/import
-  postgis:
-    image: postgis/postgis:15-3.3-alpine
-    # For arm64 build(raspberry pi4) -> image: ghcr.io/baosystems/postgis:15-3.3
-    container_name: postgis
-    ports:
-      - '5432:5432'
-    env_file:
-      - ./postgis.env 
-    volumes:
-      - pg_data:/var/lib/postgresql/data
-      
+
+  nginx_react:
+      build: 
+        context: '../frontend'
+        args:
+          REACT_APP_EXPRESS_BASE_PREFIX: http://localhost/traffic-analyzer/api
+          REACT_APP_EXPRESS_API_OBSERVATIONS_ENDPOINT: /observations
+          REACT_APP_EXPRESS_API_ROADS_ENDPOINT: /roads
+          REACT_APP_UI_BASE_PREFIX: /traffic-analyzer
+      container_name: nginx_react
+      ports:
+        - "80:80"
+
   nodejs_express:
     build: '../backend'
     container_name: nodejs_express
@@ -33,10 +44,8 @@ services:
     depends_on:
       - neo4j
       - postgis
-    restart: on-failure 
-
-
-
+    restart: on-failure
+   
 
   # pgadmin:
   #   image: dpage/pgadmin4

@@ -5,37 +5,21 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import "../App.css";
 import { useState, useEffect } from "react";
-import axios from "axios";
+import { useLazyQuery } from '@apollo/client';
 import { REACT_APP_EXPRESS_API_PREFIX, REACT_APP_EXPRESS_BASE_URL } from "../properties";
+import { roadsQuery, roadsCountQuery } from "../graphqlQueries";
 
 export default function RegionSelector({ chooseRegion, chooseRoadCount }) {
+
   const [region, setRegion] = useState();
+
 
   const handleChange = (event) => {
     const region = event.target.value;
     chooseRegion(region);
     setRegion(region);
+    chooseRoadCount(region)
   };
-
-  useEffect(() => {
-
-    if (!region || region.length === 0)
-      return;
-    const request = `${REACT_APP_EXPRESS_BASE_URL}${REACT_APP_EXPRESS_API_PREFIX}/roads?region=${region}&count=true`;
-
-    const axiosInstance = axios.create({
-      withCredentials: true, // Include credentials in requests (required by gitpod)
-    });
-
-    axiosInstance
-      .get(request)
-      .then((response) => {
-        chooseRoadCount(response.data[0].road_count);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, [region, chooseRoadCount]);
 
   return (
     <div className="map-query-filter-div">

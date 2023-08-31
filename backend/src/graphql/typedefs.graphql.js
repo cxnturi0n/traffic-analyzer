@@ -1,55 +1,34 @@
 const observationTypedefs = `#graphql
 
-enum Order {
-  ASC
-  DESC
-}
-
-enum Region{
-  Anderlecht
-  Belgium
-  Bruxelles
-}
-
-  type Observation { 
-    road_id: Int!
-    timestamp: Int!
-    avg_speed: Float!
-    num_vehicles: Int!
+  enum Order {
+    ASC
+    DESC
   }
 
-  type ObservationAnderlecht_5min {
-    road_id: Int!
-    timestamp: Int!
-    avg_speed: Float!
-    num_vehicles: Int!
+  enum Sort{
+    road_id
+    timestamp
+    avg_speed
+    num_vehicles
   }
-
-  type ObservationAnderlecht_15min {
-    road_id: Int!
-    timestamp: Int!
-    avg_speed: Float!
-    num_vehicles: Int!
+  
+  enum Region{
+    Anderlecht
+    Belgium
+    Bruxelles
   }
-
-  type ObservationAnderlecht_30min { 
-    road_id: Int!
-    timestamp: Int!
-    avg_speed: Float!
-    num_vehicles: Int!
-  }
-
-  type RoadNumVehiclesAggregation {
+  
+  type RoadSumVehiclesAggregation {
     road_id: Int!
     sum_vehicles: Int!
   }
-
-  type RoadAvgSpeedsAggregation {
+  
+  type RoadAvgSpeedAggregation {
     road_id: Int!
     avg_speed: Float!
   }
-
-  input AggregationObservationsWhere {
+  
+  input ObservationsWhere {
     region: Region!
     granularity: Int!
     startTime: Int
@@ -57,34 +36,25 @@ enum Region{
     roadIds: [Int]
     days: [Int]
   }
-
+  
   input RoadGeometriesWhere{
     region: String!
     roadIds: [Int]
   }
-
+  
   input RoadsCountWhere{
     region: Region!
   }
-
+  
   input AggregationObservationsOptions{
     limit: Int
     order: Order
   }
 
-  type Query {
-    aggregateRoadNumVehicles(
-      where: AggregationObservationsWhere,
-      options: AggregationObservationsOptions
-    ): [RoadNumVehiclesAggregation]!
-
-    aggregateRoadAvgSpeeds(
-      where: AggregationObservationsWhere,
-      options: AggregationObservationsOptions
-    ): [RoadAvgSpeedsAggregation]!
-
-    roadGeometries(where: RoadGeometriesWhere): [Road!]!
-    roadsCount(where: RoadsCountWhere): Int!
+  input ObservationsOptions{
+    limit: Int
+    sort: Sort
+    order: Order
   }
 
   type Coordinate {
@@ -104,6 +74,34 @@ enum Region{
     road_id: Int!
     polygons: [Polygon]!
   }
+  
+    type Observation { 
+      road_id: Int!
+      timestamp: Int!
+      avg_speed: Float!
+      num_vehicles: Int!
+    }
+
+  
+  type Query {
+
+    observations(where: ObservationsWhere, options: ObservationsOptions): [Observation!]
+
+    vehicleCountForEachRoad(
+      where: ObservationsWhere,
+      options: AggregationObservationsOptions
+    ): [RoadSumVehiclesAggregation]!
+  
+    averageSpeedForEachRoad(
+      where: ObservationsWhere,
+      options: AggregationObservationsOptions
+    ): [RoadAvgSpeedAggregation]!
+  
+    roads(where: RoadGeometriesWhere): [Road!]!
+    roadsCount(where: RoadsCountWhere): Int!
+  }
+  
+
 
 `;
 
