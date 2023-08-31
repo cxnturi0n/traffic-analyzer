@@ -52,4 +52,4 @@ await new Promise((resolve) =>
   httpServer.listen({ port: env.SERVER_PORT }, resolve)
 );
 
-console.log(`🚀 Server ready at http://localhost:8087 🚀`);
+console.log(`🚀 Server ready 🚀`);
