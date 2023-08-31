@@ -203,7 +203,9 @@ SELECT ogc_fid AS road_id, ST_AsGeoJSON(wkb_geometry) AS polygons FROM anderlech
 Postgis is an extension of Postgres so I could use the simple and well documented Javascript driver. To avoid opening a connection for each request, I used the out of the box connection pool provided by the driver itself. More details here: [backend/src/databases/postgres.databases.js](backend/src/databases/postgres.database.js).
 
 <H2 id="TryIt">Try it</H2>
+
 If you wish to try the software, you can follow these steps. At the end you will be able to access, locally, the react single page application, the Apollo GraphQL client web interface, the rest api for retrieving road geometries, the neo4j web interface and optionally(if decommented from the docker compose) to pg-admin. You should be equipped with a Linux environment with docker, npm and yarn already installed. It works on both AMD64 and ARM64 architectures. This is an image representing the [Docker Compose](deploy/docker-compose.yaml) containers: 
+
 ![DockerCompose](https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/8f8f7cc8-c66b-449a-8ebe-bd89eb54e7bc)
 
 The containers are interconnected through a Docker network bridge called *deploy_default*. This arrangement facilitates communication between the containers, employing their individual container names as hostnames. The Docker DNS (with the IP address 127.0.1.11) resolves these names to the respective IP addresses of the containers.
