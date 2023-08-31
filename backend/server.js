@@ -11,6 +11,8 @@ import { observationTypedefs } from "./src/graphql/typedefs.graphql.js";
 import * as postgres from "./src/databases/postgres.database.js";
 import { getRoads } from "./src/controllers/roads.controller.js";
 import * as env from "./properties.js";
+import { validateQueryParameters } from "./src/middlewares/validateQueryParams.middleware.js";
+import { errorMiddleware } from "./src/middlewares/error.middleware.js";
 
 var app = express();
 
@@ -39,14 +41,21 @@ const server = new ApolloServer({
 
 await server.start();
 
-app.use(env.API_PREFIX + "/roads", corsConfig, bodyParser.json(), getRoads); // Roads Rest endpoint
+app.use(
+  env.API_PREFIX + "/roads", // Roads Rest endpoint
+  cors(corsConfig),
+  bodyParser.json(),
+  validateQueryParameters,
+  errorMiddleware,
+  getRoads
+);
 
 app.use(
-  env.API_PREFIX + "/observations",
-  corsConfig,
+  env.API_PREFIX + "/observations", // Observations GraphQL endpoint
+  cors(corsConfig),
   bodyParser.json(),
   expressMiddleware(server)
-); // Observations GraphQL endpoint
+);
 
 await new Promise((resolve) =>
   httpServer.listen({ port: env.SERVER_PORT }, resolve)
