@@ -3,13 +3,14 @@
     <li><a href="#Introduction">Introduction</a></li>
     <li><a href="#Specifications">Specifications</a></li>
     <li><a href="#WebInterface">Web interface</a></li>
-    <li><a href="#ApiEndpoints">Api endpoints</a></li>
+    <li><a href="#HybridApi">Hybrid API</a></li>
     <li><a href="#Neo4j">Neo4j</a></li>
     <li><a href="#Postgis">Postgis</a></li>
     <li><a href="#TryIt">Try it</a></li>
 </ul>
 <H2 id="Introduction">Introduction</H2>
-This project was created as part of the NoSQL course within the Computer Science Master's Degree program at the University of Naples Federico II. It consists of a GRAND (GraphQL, React, Apollo and Neo4j Database) stack web application designed for traffic analysis, with a web interface developed in ReactJS, linked to a Nodejs Express server that retrieves road geometries from PostGIS and gathers observations from Neo4j. 
+
+This project was created as part of the NoSQL course within the Computer Science Master's Degree program at the University of Naples Federico II. It consists of a GRAND (GraphQL, React, Apollo, and Neo4j Database) stack web application designed for traffic analysis. This application exposes a web interface developed in ReactJS, along with a hybrid API that enables you to query the observations stored in Neo4j through *GraphQL*, and access road geometries stored in PostGIS via a *REST API*.
 <H2 id="Specifications">Project Specifications</H2>
 Since 2016, in Belgium, a maximum threshold (3.5 tons) has been imposed on the weight of trucks circulating on highways. Those exceeding this threshold must pay an additional toll for each kilometer traveled. For this purpose, the installation of an On-Board Unit (OBU) on the affected vehicles (approximately 140,000) has been made mandatory for monitoring movements. Each OBU sends a message approximately every 30 seconds.
 
@@ -39,13 +40,13 @@ Several valuable insights can be derived from this system, like for example:
 - *Identify the least congested roads during specific time intervals on weekends.*
 - *Visualize the top-n roads with the highest speeds on Sundays.*
 - *Illustrate the probability distribution of speeds during the COVID-19 pandemic.*
-- *Present the probability distribution of vehicle counts for specific roads.*
+- *Present the probability distribution of vehicle count for specific roads in certain intervals.*
 - *...*
 
 
 Here is an image representing the software components involved:
 
-![Components](https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/86949d35-5780-4129-b17b-1caba111a7ec)
+![Arch](https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/39b9144f-29fa-4293-a25f-92ef16317cee)
 
 
 <H2 id="WebInterface">Web Interface</H2>
@@ -53,9 +54,9 @@ The user interface is a Single Page Application, entirely created using ReactJS,
 
 https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/2d6dfa43-c14a-4802-b0d6-d5caa3cedc01
 
-<H2 id="ApiEndpoints">Api Endpoints</H2>
+<H2 id="HybridApi">Hybrid API</H2>
 
-The API is empowered by Express, a backend web application framework designed for creating RESTful APIs using Node.js. [Here](backend/server.js) is the source code of the server entrypoint. Here is an overview of the endpoints with the available query parameters:
+The API is empowered by Express, a backend web application framework designed for creating APIs using Node.js. It consists of an hybrid Api.  [Here](backend/server.js) is the source code of the server entrypoint. Here is an overview of the endpoints with the available query parameters:
 
 ### 1. Get Road Polygons
 
