@@ -14,6 +14,11 @@ import * as env from "./properties.js";
 
 var app = express();
 
+const corsConfig = {
+  origin: env.ALLOW_ORIGIN_HEADER_REACT_WEBAPP,
+  credentials: true,
+};
+
 neo4j.initDriver(env.NEO4J_URI, env.NEO4J_USERNAME, env.NEO4J_PASSWORD);
 
 postgres.initPool(
@@ -34,12 +39,17 @@ const server = new ApolloServer({
 
 await server.start();
 
-app.use(cors())
-app.use(bodyParser.json())
+app.use(env.API_PREFIX + "/roads", corsConfig, bodyParser.json(), getRoads); // Roads Rest endpoint
 
-app.use(env.API_PREFIX+"/roads", getRoads) // Roads Rest endpoint
-app.use(env.API_PREFIX+"/observations", expressMiddleware(server)); // Observations GraphQL endpoint
+app.use(
+  env.API_PREFIX + "/observations",
+  corsConfig,
+  bodyParser.json(),
+  expressMiddleware(server)
+); // Observations GraphQL endpoint
 
-await new Promise((resolve) => httpServer.listen({ port: env.SERVER_PORT }, resolve));
+await new Promise((resolve) =>
+  httpServer.listen({ port: env.SERVER_PORT }, resolve)
+);
 
 console.log(`🚀 Server ready at http://localhost:8087 🚀`);
