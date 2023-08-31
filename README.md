@@ -50,13 +50,13 @@ Here is an image representing the software components involved:
 
 
 <H2 id="WebInterface">Web Interface</H2>
-The user interface is a Single Page Application, entirely created using ReactJS, a JavaScript library that facilitates the construction of user interfaces through component-based development. While I'm not an expert nor a fan of frontend development, my intention was to offer you a more straightforward and yet simple approach to conducting traffic analysis without the need to directly interact with raw APIs. Maps are integrated using Leaflet React components. Here is a usage example:
+The user interface is a Single Page Application, entirely created using ReactJS, a JavaScript library that facilitates the construction of user interfaces through component-based development. While I'm not an expert nor a fan of frontend development, my intention was to offer you a more straightforward and yet simple approach to conduct traffic analysis without the need to directly interact with raw APIs. Maps are integrated using Leaflet React components. Here is a usage example:
 
 https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/2d6dfa43-c14a-4802-b0d6-d5caa3cedc01
 
 <H2 id="HybridApi">Hybrid API</H2>
 
-The API is empowered by Express, a backend web application framework designed for creating APIs using Node.js. It consists of an hybrid Api.  [Here](backend/server.js) is the source code of the server entrypoint. Here is an overview of the endpoints with the available query parameters:
+The API is empowered by Express, a backend web application framework designed for creating APIs using Node.js. It consists of an hybrid Api, where .  [Here](backend/server.js) is the source code of the server entrypoint. Here is an overview of the endpoints with the available query parameters:
 
 ### 1. Get Road Polygons
 
@@ -208,7 +208,7 @@ To demonstrate the software in action to the professors, I'm presenting two appr
 ### Deploy locally through docker compose
 Although a bit more complex, grants you complete control over the involved services. This includes accessing the webpage, the API, PGAdmin (if uncommented from the docker-compose file), and the Neo4j web interface. To proceed with this approach, you should be equipped with a Linux environment containing Docker, as the initialization scripts require it. I have successfully tested it on both AMD64 and ARM64 architectures. This is an image representing the [Docker Compose](deploy/docker-compose.yaml) containers: 
 
-![Docker](https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/cfa90653-50f6-4776-abf0-edc9d1265ad8)
+![DockerCompose](https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/8f8f7cc8-c66b-449a-8ebe-bd89eb54e7bc)
 
 
 The containers are interconnected through a Docker network bridge called *deploy_default*. This arrangement facilitates communication between the containers, employing their individual container names as hostnames. The Docker DNS (with the IP address 127.0.1.11) resolves these names to the respective IP addresses of the containers.
