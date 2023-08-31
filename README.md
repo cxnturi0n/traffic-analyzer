@@ -203,16 +203,11 @@ SELECT ogc_fid AS road_id, ST_AsGeoJSON(wkb_geometry) AS polygons FROM anderlech
 Postgis is an extension of Postgres so I could use the simple and well documented Javascript driver. To avoid opening a connection for each request, I used the out of the box connection pool provided by the driver itself. More details here: [backend/src/databases/postgres.databases.js](backend/src/databases/postgres.database.js).
 
 <H2 id="TryIt">Try it</H2>
-To demonstrate the software in action to the professors, I'm presenting two approaches. 
-
-### Deploy locally through docker compose
-Although a bit more complex, grants you complete control over the involved services. This includes accessing the webpage, the API, PGAdmin (if uncommented from the docker-compose file), and the Neo4j web interface. To proceed with this approach, you should be equipped with a Linux environment containing Docker, as the initialization scripts require it. I have successfully tested it on both AMD64 and ARM64 architectures. This is an image representing the [Docker Compose](deploy/docker-compose.yaml) containers: 
-
+If you wish to try the software, you can follow these steps. At the end you will be able to access, locally, the react single page application, the Apollo GraphQL client web interface, the rest api for retrieving road geometries, the neo4j web interface and optionally(if decommented from the docker compose) to pg-admin. You should be equipped with a Linux environment with docker, npm and yarn already installed. It works on both AMD64 and ARM64 architectures. This is an image representing the [Docker Compose](deploy/docker-compose.yaml) containers: 
 ![DockerCompose](https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/8f8f7cc8-c66b-449a-8ebe-bd89eb54e7bc)
 
-
 The containers are interconnected through a Docker network bridge called *deploy_default*. This arrangement facilitates communication between the containers, employing their individual container names as hostnames. The Docker DNS (with the IP address 127.0.1.11) resolves these names to the respective IP addresses of the containers.
-Within the setup, the *react_nginx* container is composed of an nginx server along with the compiled react web interface and it is the only container exposed to the outside on port 80. Nginx firstly acts as a web server, delivering the *index.html* file to user browsers when they access the webpage. Secondly, it acts as a reverse proxy, forwarding API requests initiated by the browser to the Express server running inside *nodejs_express* container. This Express server retrieves necessary data from the associated databases, running in *neo4j* and *postgis* containers, and subsequently responds with the relevant results. These responses are then processed by the browser to update various html components such as the Leaflet map, graphs, or tables within the user interface.
+Within the setup, the *react_nginx* container is composed of an nginx server along with the compiled react web interface and it is the only container exposed to the outside on port 80. Nginx firstly acts as a web server, delivering the *index.html* file to user browsers when they access the webpage. Secondly, it acts as a reverse proxy, forwarding API requests initiated by the browser to the Express server running inside *nodejs_express* container. This Express server acts as a Rest and GraphQL server. It retrieves necessary data from the associated databases, running in *neo4j* and *postgis* containers, and subsequently responds with the relevant results. These responses are then processed by the browser to update various html components such as the Leaflet map, graphs, or tables within the user interface.
 
 
 The [install.sh](deploy/install.sh) script handles the following tasks:
@@ -247,9 +242,6 @@ chmod u+x install.sh
 Once done, you can access the following in your browser:
 - React UI: http://localhost/traffic-analyzer
 - Neo4j UI: http://localhost:7474 (Use bolt protocol with credentials in neo4j.env)
+- Apollo GraphQL Web Client: http://localhost:8087/traffic-analyzer/api/observations
 - PGAdmin UI: http://localhost:5555 (Credentials in pgadmin.env)
-
-### Directly try Web UI
-
-The second approach is the faster but just gives access to the web UI. Connect to https://projects.fabiocinicolo.dev/traffic-analyzer. It has been deployed on my raspberry pi, which of course will not guarantee you good performances due to its limited computational resources and additionally could be offline sometimes for personal reasons. As the storage is limited, I just loaded Anderlecht csvs, so you can "only" query the 12 millions observations over the Anderlecht region.
 
