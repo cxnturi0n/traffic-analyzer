@@ -9,7 +9,7 @@
     <li><a href="#TryIt">Try it</a></li>
 </ul>
 <H2 id="Introduction">Introduction</H2>
-This project was created as part of the NoSQL course within the Computer Science Master's Degree program at the University of Naples Federico II. It consists of a minimal full stack web application designed for traffic analysis, with a web interface developed in ReactJS, linked to a Nodejs Express server that retrieves road geometries from PostGIS and gathers observations from Neo4j. 
+This project was created as part of the NoSQL course within the Computer Science Master's Degree program at the University of Naples Federico II. It consists of a GRAND (GraphQL, React, Apollo and Neo4j Database) stack web application designed for traffic analysis, with a web interface developed in ReactJS, linked to a Nodejs Express server that retrieves road geometries from PostGIS and gathers observations from Neo4j. 
 <H2 id="Specifications">Project Specifications</H2>
 Since 2016, in Belgium, a maximum threshold (3.5 tons) has been imposed on the weight of trucks circulating on highways. Those exceeding this threshold must pay an additional toll for each kilometer traveled. For this purpose, the installation of an On-Board Unit (OBU) on the affected vehicles (approximately 140,000) has been made mandatory for monitoring movements. Each OBU sends a message approximately every 30 seconds.
 
