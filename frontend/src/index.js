@@ -22,8 +22,6 @@ const router = createBrowserRouter(
   )
 );
 
-
-
 const defaultOptions = {
   watchQuery: {
     fetchPolicy: "no-cache",
