@@ -46,7 +46,7 @@ Several valuable insights can be derived from this system, like for example:
 
 Here is an image representing the software components involved:
 
-![SoftwareComponents](https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/07dbe8cc-6ffc-4946-819b-80a86fc93420)
+![BackendFrontend](https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/c73c1741-aeca-4f9b-a05f-bb8ee9ee6e2f)
 
 
 <H2 id="WebInterface">Web Interface</H2>
@@ -60,30 +60,31 @@ The API is empowered by Express, a backend web application framework designed fo
 
 <H3>Why Hybrid?</H3>
 
-The primary motivation behind this decision was to reduce latency when rendering road geometries on a map. Road geometries are stored as collections of GeoJSONs, where each road consists of a polygon containing ring coordinates (each polygon can have one or more rings), represented as an array of latitude and longitude pairs.
+The motivation behind this decision was to reduce latency when rendering road geometries on a map. Road geometries are stored as collections of GeoJSONs, where each road consists of a polygon containing ring coordinates (each polygon can have one or more rings), represented as an array of latitude and longitude pairs.
 
-The main reason of this decision was to reduce latency to render road geometries on the map. Road geometries are stored as collections of geojsons, where each road consists of a polygon, which contain ring coordinates(each polygon can have 1 or more rings), as an array of latitude and longitude. Initially, I defined a type "Road" with the following typedefs:
+The reason of this decision was to reduce latency to render road geometries on the map. Road geometries are stored as collections of geojsons, where each road consists of a polygon, which contain ring coordinates(each polygon can have 1 or more rings), as an array of latitude and longitude. Initially, I defined following typedefs to represent a *Road* object:
 ```
 #graphql
   ...
 
-  type Coordinate {
-    latitude: Float!
-    longitude: Float!
-  }
-  
-  type LinearRing {
-    coordinates: [Coordinate!]!
-  }
-  
-  type Polygon {
-    rings: [LinearRing!]!
-  }
-  
   type Road {
     road_id: Int!
     polygons: [Polygon]!
   }
+
+  type Polygon {
+    rings: [LinearRing!]!
+  }
+
+  type LinearRing {
+    coordinates: [Coordinate!]!
+  }
+  
+  type Coordinate {
+    latitude: Float!
+    longitude: Float!
+  }
+
 
   type Query {
     ...
@@ -118,7 +119,7 @@ The challenge with this approach surfaced on the frontend. React Leaflet expects
     ],
 ] ]
 ```
-To query and fetch all road geometries for a specific area, I would have used a query similar to this one:
+To query and fetch all road geometries for a specific area, I used a query similar to this one:
 ```
 query Roads($where: RoadGeometriesWhere) {
   roads(where: $where) {
@@ -143,9 +144,9 @@ query Roads($where: RoadGeometriesWhere) {
 Before rendering these geometries on the map, I had to convert the array of Road objects returned by the server into the format expected by Leaflet. This conversion process placed a significant load on the browser and turned out to be slow and inefficient, taking approximately 10 seconds to render all road geometries for a region like Anderlecht.
 By leveraging REST, I was able to return the road geometries in the exact format that Leaflet expected, effectively reducing the latency to render the map to just 1 second.
 
-<H3>Rest endpoints</H3>
+<H3>Rest Api</H3>
 
-### 1. Get Road Polygons
+### 1. Get Road Geometries
 
 **Endpoint:** `/traffic-analyzer/api/roads`
 - **Parameters:**
@@ -153,7 +154,7 @@ By leveraging REST, I was able to return the road geometries in the exact format
 - **Example:**
   - Get Anderlecht road polygons: `/traffic-analyzer/api/roads?region=Anderlecht`
 
-### 2. Get Road Polygons by IDs
+### 2. Get Road Geometries by IDs
 
 **Endpoint:** `/traffic-analyzer/api/roads`
 - **Parameters:**
@@ -171,6 +172,21 @@ By leveraging REST, I was able to return the road geometries in the exact format
 - **Example:**
   - Get road count for Belgium: `/traffic-analyzer/api/roads?region=Belgium&count=true`
 
+<H3>GraphQL Api</H3>
+
+GraphQL is integrated into Express server using the Apollo Express Middleware. To get an in-depth look at how I've defined types and resolvers, you can explore the following files:
+- [typedefs.graphql.js](backend/src/graphql/typedefs.graphql.js): This file contains the type definitions that outline the GraphQL schema.
+- [resolvers.graphql.js](backend/src/graphql/resolvers.graphql.js): In this file, you'll find the resolver functions responsible for resolving types by executing dynamic cypher queries.
+
+As you can see from the following picture, the client can query observations using graqphql syntax, that is simple and intuitive, mostly if you are familiar with json. You are only getting what you ask, and so there is not the risk of overfetching. If you only ask for the road ids and number of vehicles, you don't get timestamps and average speeds as well, like in a common rest api scenario would occur. The graphql server will take care of translating the graphql query into a cypher query, and will return the result in the json format you asked. 
+
+
+
+While Neo4j offers the *Neo4j GraphQL Library*, which automates GraphQL CRUD queries generation and provides complex filtering capabilities (and more), I opted for a custom GraphQL setup to gain more control over the queries. This allowed me to perform queries that extend beyond simple CRUD operations. For instance, I could execute queries to calculate the sum of vehicles for each road, a task not readily achievable with autogenerated queries. Additionally, I had the flexibility to filter observations based on specific days of the week.
+
+Implementing GraphQL in this manner also provided an excellent opportunity to become more familiar with GraphQL concepts. We had the freedom to design types, inputs, enums, and resolvers. While field resolvers were autogenerated, this happened because the type field names matched the attribute names of Neo4j nodes, simplifying our development process.
+
+I am aware that neo4j offers the *Neo4j GraphQL Library* that provides Auto-generated GraphQL CRUD queries, complex filtering, etc... but I needed to have more control over the queries, performing queries that went beyond the simple CRUD. For example queries to obtain the sum of vehicles for each road were not possible from the autogenerated queries or for example queries to filter observations on specific days of the week. Implementing GraphQL server logic also provided an excellent opportunity to become more familiar with GraphQL concepts. I had the freedom to design types, inputs, enums, and resolvers. Fortunately, I didn't need to manually write field resolvers. This was made possible because the Apollo GraphQL library automatically generated them, because I made sure that GraphQL field names precisely matched with the neo4j node attribute names.
 
 <H2 id="Neo4j">Neo4j</H2>
 
