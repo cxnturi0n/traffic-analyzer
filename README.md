@@ -52,7 +52,7 @@ Here is an image representing the software components involved:
 <H2 id="WebInterface">Web Interface</H2>
 The user interface is a Single Page Application, entirely created using ReactJS, a JavaScript library that facilitates the construction of user interfaces through component-based development. While I'm not an expert nor a fan of frontend development, my intention was to offer you a more straightforward and yet simple approach to conduct traffic analysis without the need to directly interact with raw APIs. Maps are integrated using Leaflet React components. Here is a usage example:
 
-https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/2d6dfa43-c14a-4802-b0d6-d5caa3cedc01
+https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/70d988f1-d7c5-4a7d-b583-8e045d1cf332
 
 <H2 id="HybridApi">Hybrid API</H2>
 
