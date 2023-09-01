@@ -278,7 +278,7 @@ export default function App() {
               region: region,
               startTime: beginTimestamp,
               roadIds:
-                roadIds.length > 0 ? roadIds.map((road) => road.road_id) : null,
+                roadIds.length > 0 ? roadIds.map((road) => Number(road.road_id)) : null,
               granularity: granularity,
               endTime: endTimestamp,
               days: days.length > 0 ? days : null,
@@ -297,7 +297,7 @@ export default function App() {
               region: region,
               startTime: beginTimestamp,
               roadIds:
-                roadIds.length > 0 ? roadIds.map((road) => road.road_id) : null,
+                roadIds.length > 0 ? roadIds.map((road) => Number(road.road_id)) : null,
               granularity: granularity,
               endTime: endTimestamp,
               days: days.length > 0 ? days : null,
@@ -318,7 +318,7 @@ export default function App() {
               region: region,
               startTime: beginTimestamp,
               roadIds:
-                roadIds.length > 0 ? roadIds.map((road) => road.road_id) : null,
+                roadIds.length > 0 ? roadIds.map((road) => Number(road.road_id)) : null,
               granularity: granularity,
               endTime: endTimestamp,
               days: days.length > 0 ? days : null,
@@ -335,7 +335,7 @@ export default function App() {
               region: region,
               startTime: beginTimestamp,
               roadIds:
-                roadIds.length > 0 ? roadIds.map((road) => road.road_id) : null,
+                roadIds.length > 0 ? roadIds.map((road) => Number(road.road_id)) : null,
               granularity: granularity,
               endTime: endTimestamp,
               days: days.length > 0 ? days : null,
@@ -373,7 +373,7 @@ export default function App() {
             region: region,
             startTime: beginTimestamp,
             roadIds:
-              roadIds.length > 0 ? roadIds.map((road) => road.road_id) : null,
+              roadIds.length > 0 ? roadIds.map((road) => Number(road.road_id)) : null,
             granularity: 30,
             endTime: endTimestamp,
             days: days.length > 0 ? days : null,
