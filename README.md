@@ -251,7 +251,7 @@ Postgis is an extension of Postgres so I could use the simple and well documente
 
 <H2 id="TryIt">Try it</H2>
 
-If you wish to try the software, you can follow these steps. At the end you will be able to access, locally, the react single page application, the Apollo GraphQL client web interface, the rest api for retrieving road geometries and the neo4j web interface. You should be equipped with a Linux environment with docker, npm and yarn already installed. It works on both AMD64 and ARM64 architectures. This is an image representing the [Docker Compose](deploy/docker-compose.yaml) containers: 
+If you wish to try the software, you can follow these steps. At the end you will be able to access, locally, the react single page application, the Apollo GraphQL client web interface, the rest api for retrieving road geometries and the neo4j web interface. You should be equipped with a Linux environment with docker engine and docker compose plugin already installed. It works on both AMD64 and ARM64 architectures. This is an image representing the [Docker Compose](deploy/docker-compose.yaml) containers: 
 
 ![ComposeServices](https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/6667efb8-4e09-436b-8c0a-04e34733f065)
 
