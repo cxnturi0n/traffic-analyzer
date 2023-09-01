@@ -5,8 +5,6 @@ const observationResolvers = {
     observations: getObservations,
     vehicleCountForEachRoad: getVehicleCountForEachRoad,
     averageSpeedForEachRoad: getAverageSpeedForEachRoad,
-    // roads: getRoads,
-    // roadsCount: getRoadsCount
   },
 };
 
