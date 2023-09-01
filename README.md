@@ -56,7 +56,94 @@ https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/2d6dfa43-c14a-4802
 
 <H2 id="HybridApi">Hybrid API</H2>
 
-The API is empowered by Express, a backend web application framework designed for creating APIs using Node.js. It consists of an hybrid Api, where .  [Here](backend/server.js) is the source code of the server entrypoint. Here is an overview of the endpoints with the available query parameters:
+The API is empowered by Express, a backend web application framework designed for creating APIs using Node.js. It consists of an hybrid Api, where road observations can be queried using GraphQL and road geometries using rest endpoints. [Here](backend/server.js) is the source code of the server entrypoint.
+
+<H3>Why Hybrid?</H3>
+
+The primary motivation behind this decision was to reduce latency when rendering road geometries on a map. Road geometries are stored as collections of GeoJSONs, where each road consists of a polygon containing ring coordinates (each polygon can have one or more rings), represented as an array of latitude and longitude pairs.
+
+The main reason of this decision was to reduce latency to render road geometries on the map. Road geometries are stored as collections of geojsons, where each road consists of a polygon, which contain ring coordinates(each polygon can have 1 or more rings), as an array of latitude and longitude. Initially, I defined a type "Road" with the following typedefs:
+```
+#graphql
+  ...
+
+  type Coordinate {
+    latitude: Float!
+    longitude: Float!
+  }
+  
+  type LinearRing {
+    coordinates: [Coordinate!]!
+  }
+  
+  type Polygon {
+    rings: [LinearRing!]!
+  }
+  
+  type Road {
+    road_id: Int!
+    polygons: [Polygon]!
+  }
+
+  type Query {
+    ...
+
+    roads(where: RoadGeometriesWhere): [Road!]!
+  }
+
+```
+A road has a road ID, and a list of polygons, where each polygon has a list of rings, and each ring has an array of coordinates representing latitude and longitude pairs. This structure was designed to allow the server to be queried for road geometries based on certain filters.
+The challenge with this approach surfaced on the frontend. React Leaflet expects road geometries in the following format:
+```
+[ [
+    [
+        [
+            [lat,lng],
+            [lat,lng],...
+        ],
+        [
+            [lat,lng],
+            [lat,lng],...
+        ],
+    ],
+    [
+        [
+            [lat,lng],
+            [lat,lng],...
+        ],
+        [
+            [lat,lng],
+            [lat,lng],...
+        ],
+    ],
+] ]
+```
+To query and fetch all road geometries for a specific area, I would have used a query similar to this one:
+```
+query Roads($where: RoadGeometriesWhere) {
+  roads(where: $where) {
+    road_id
+    polygons {
+      rings {
+        coordinates {
+          longitude
+          latitude
+        }
+      }
+    }
+  }
+}
+{
+  "where": {
+    "roadIds": null,
+    "region": "Anderlecht"
+  }
+}
+```
+Before rendering these geometries on the map, I had to convert the array of Road objects returned by the server into the format expected by Leaflet. This conversion process placed a significant load on the browser and turned out to be slow and inefficient, taking approximately 10 seconds to render all road geometries for a region like Anderlecht.
+By leveraging REST, I was able to return the road geometries in the exact format that Leaflet expected, effectively reducing the latency to render the map to just 1 second.
+
+<H3>Rest endpoints</H3>
 
 ### 1. Get Road Polygons
 
@@ -84,52 +171,6 @@ The API is empowered by Express, a backend web application framework designed fo
 - **Example:**
   - Get road count for Belgium: `/traffic-analyzer/api/roads?region=Belgium&count=true`
 
-### 4. Get Road Observations
-
-**Endpoint:** `/traffic-analyzer/api/roads/observations`
-- **Parameters:**
-  - `region` (String, Mandatory)
-  - `granularity` (Integer, Mandatory): 5, 10, or 15 - filter observations by time granularity.
-  - `type` (String, Optional): Options - most-crowded, less-crowded, most-speed, least-speed.
-  - `roadIds` (Array of integers, Optional)
-  - `polygons` (Boolean, Optional): Return road polygons if true.
-  - `tbegin` (Integer, Optional): Unix timestamp for the start time (seconds precision).
-  - `tend` (Integer, Optional): Unix timestamp for the end time (seconds precision).
-  - `days` (Array of integers, Optional): Select observations on specific days of the week (0=Sunday, 1=Monday, ..., 6=Saturday). 
-  - `limit` (Integer, Optional): Limit the result size.
-- **Examples:**
-  - Get least congested roads in Anderlecht within a time interval, using a 5-minute dataset: `/traffic-analyzer/api/roads/observations?type=least-crowded&region=Anderlecht&tbegin=1565812380&tend=1640463600&granularity=5`
-  - Get roads with the highest speeds in Anderlecht starting from a given timestamp, focusing on weekends, using a 15-minute granularity dataset, and returning road geometries as well: `/traffic-analyzer/api/roads/observations?type=most-speed&region=Anderlecht&tbegin=1565812380&days=[6,0]&granularity=15&polygons=true`
-  - Get observations of specific roads in Anderlecht captured on Mondays: `/traffic-analyzer/api/roads/observations?region=Anderlecht&roadIds=[10,40,65]&days=[1]&granularity=15&limit=10000`
-
-
-### 5. Get Number of Vehicles
-
-**Endpoint:** `/traffic-analyzer/api/roads/observations/num-vehicles`
-- **Parameters:**
-  - `region` (String, Mandatory)
-  - `granularity` (Integer, Mandatory)
-  - `roadIds` (Array of integers, Optional)
-  - `tbegin` (Integer, Optional)
-  - `tend` (Integer, Optional)
-  - `days` (Array of integers, Optional)
-  - `limit` (Integer, Optional)
-- **Example:**
-  - Get vehicle count in Anderlecht within a specific time interval, focusing on weekdays, using a 30-minute granularity dataset, for roads with IDs 1000 and 2000: `/traffic-analyzer/api/roads/observations/num-vehicles?region=Anderlecht&roadIds=[1000,2000]&tbegin=1565812380&tend=1640463600&granularity=30&days=[1,2,3,4,5]`
-
-### 6. Get Average Speeds
-
-**Endpoint:** `/traffic-analyzer/api/roads/observations/avg-speeds`
-- **Parameters:**
-  - `region` (String, Mandatory)
-  - `granularity` (Integer, Mandatory)
-  - `roadIds` (Array of integers, Optional)
-  - `tbegin` (Integer, Optional)
-  - `tend` (Integer, Optional)
-  - `days` (Array of integers, Optional)
-  - `limit` (Integer, Optional)
-- **Example:**
-  - Obtain average speeds in Brussels using a 5-minute granularity dataset, with observations limited to 30000: `/traffic-analyzer/api/roads/observations/avg-speeds?region=Bruxelles&granularity=5&limit=30000`
 
 <H2 id="Neo4j">Neo4j</H2>
 
