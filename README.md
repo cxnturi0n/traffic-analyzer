@@ -176,7 +176,7 @@ By leveraging REST, I was able to return the road geometries in the exact format
 GraphQL is integrated into Express server using the Apollo Express Middleware. To get an in-depth look at how I've defined types and resolvers, you can explore the following files:
 - [Typedefs](backend/src/graphql/typedefs.graphql.js): This file contains the type definitions that outline the GraphQL schema.
 - [Resolvers](backend/src/graphql/resolvers.graphql.js): In this file, you'll find the resolver definitions responsible for resolving types by executing dynamic cypher queries.
-- [Resolver implementations](backend/src/graphql/resolvers.graphql.js): In this file, you'll find the resolver implementations.
+- [Resolver implementations](backend/src/services/observations.service.js): In this file, you'll find the resolver implementations.
 
 
 The clients can query observations using graqphQL syntax, that is simple and intuitive, mostly if you are familiar with json. You are only getting what you ask, and so there is not the risk of overfetching. If you only ask for the road ids and number of vehicles, you don't get timestamps and average speeds as well, like in a common rest api scenario would occur. The GraphQL server will handle the translation of the GraphQL query into a Cypher query and return the result in the JSON format as requested. The following diagram illustrates how the server processes a GraphQL query to retrieve the top 3 most congested roads from January 1, 2019, to January 16, 2019, specifically on weekends (Saturdays and Sundays).
@@ -217,7 +217,7 @@ CALL apoc.periodic.iterate(
 ```
 
   
-The first query loads *batchSize* lines from the csv and the second query is applied for each element in the batch, until the csv is over. By default if *parallel* is set to true, there will be 50 concurrent tasks performing the insert, but this value can be tuned by setting the *concurrency* option to the value needed. I didn't really try to fine tune it because on my pc the over reported configuration for loading Anderlecht observations (about 12 million nodes) took around 2 minutes.
+The first query loads *batchSize* lines from the csv and the second query is applied for each element in the batch, until the csv is over. By default if *parallel* is set to true, there will be 50 concurrent tasks performing the insert, but this value can be tuned by setting the *concurrency* option to the value needed. I didn't really try to fine tune it because on my pc the over reported configuration for loading Anderlecht observations (about 12 million nodes) took around 1 minute.
 
 To speed up queries involving this substantial dataset, specific indexes are established. Notably, RANGE indexes are enforced for attributes like *timestamp* and *road_id*. These indexes significantly enhance query performance. Here are the index creation statements for timestamp and road_id over ObservationAnderlecht_5min nodes:
 ```
@@ -228,13 +228,13 @@ CREATE INDEX Index_ObservationAnderlecht_5min_timestamp IF NOT EXISTS FOR (o:Obs
 ### Neo4j Javascript driver
 The Neo4j JavaScript Driver is among the five officially supported drivers, with the other options encompassing Java, .NET, Python, and Go. I opted for this particular driver due to my requirement for a straightforward, secure and efficient means of interacting with Neo4j, especially within a backend framework like Node.js. This choice was made to avoid the potentially complex initial setup of alternatives such as Spring Boot. Although my confidence in JavaScript is not as strong as it is in Java, I proceeded with this decision.
 Since I'm not utilizing a cluster setup, I rely on a single instance of the driver, implemented through the Singleton Pattern.
-This driver establishes numerous TCP connections with the database. From this collection, a subset of connections are borrowed by sessions that are responsible for performing sequences of transactions. The driver additionally supports the use of placeholders in dinamic statements, to prevent sql injections. More details in the [backend/src/databases/neo4j.database.js](backend/src/databases/neo4j.database.js) and [backend/src/services/observations.service.js](backend/src/services/observations.service.js) modules.
+This driver establishes numerous TCP connections with the database. From this collection, a subset of connections are borrowed by sessions that are responsible for performing sequences of transactions. The driver additionally supports the use of placeholders in dinamic statements, to prevent sql injections. More details in the [neo4j.database.js](backend/src/databases/neo4j.database.js), [observations.controller.js](backend/src/controllers/observations.controller.js) and [observations.service.js](backend/src/services/observations.service.js) modules.
 
 <H2 id="Postgis">Postgis</H2>
 The database chosen for storing road geometries is PostGIS, which is an extension for PostgreSQL adding support storing, indexing and querying geographic data. I choose PostGIS as I was already familiar with PostgreSQL, and I did not have experience with any other Geospatial database.
 
 ### Loading
-Geometries loading is automatized using [deploy/init-postgis.sh](deploy/init-postgis.sh) script. It leverages ogr2ogr utility from the Gdal package. The process was not straightforward. Geometries present in the dataset jsons were in CRS84 format, which represent polygon coordinates as a pairs of this type (&lt;longitude&gt;, &lt;latitude&gt;). Leaflet react components expect coordinates to be pairs of this type (&lt;latitude&gt;,&lt;longitude&gt;). Instead of performing the swaps on the backend or directly in the browser, causing performances issues, I switched the latitude and longitude fields of every road polygon in the jsons before performing the load on the database, using the following python script [deploy/swap_coordinates.py](deploy/swap_coordinates.py). It converts the CRS84 to a valid GeoJSON using WGS84 as coordinate reference system. After the conversion data is loaded using ogr2ogr. I am not sure if there is a way to perform this conversion directly with ogr2ogr, however, this approach worked fine. Here is an example of loading the Anderlecht geoJson into the database:
+Geometries loading is automatized using [init-postgis.sh](deploy/init-postgis.sh) script. It leverages ogr2ogr utility from the Gdal package. The process was not straightforward. Geometries present in the dataset jsons were in CRS84 format, which represent polygon coordinates as a pairs of this type (&lt;longitude&gt;, &lt;latitude&gt;). Leaflet react components expect coordinates to be pairs of this type (&lt;latitude&gt;,&lt;longitude&gt;). Instead of performing the swaps on the backend or directly in the browser, causing performances issues, I switched the latitude and longitude fields of every road polygon in the jsons before performing the load on the database, using the following python script [swap_coordinates.py](deploy/swap_coordinates.py). It converts the CRS84 to a valid GeoJSON using WGS84 as coordinate reference system. After the conversion data is loaded using ogr2ogr. I am not sure if there is a way to perform this conversion directly with ogr2ogr, however, this approach worked fine. Here is an example of loading the Anderlecht geoJson into the database:
 ```
 ogr2ogr -f "PostgreSQL" "PG:dbname=belgium_road_network user=postgres password=password host=192.168.1.130" "Anderlecht_streets.geojson" -nln "anderlecht_streets" -nlt "POLYGON"
 ```
@@ -247,7 +247,7 @@ SELECT ogc_fid AS road_id, ST_AsGeoJSON(wkb_geometry) AS polygons FROM anderlech
  The result of this query is an array of pairs that hold road IDs along with their corresponding polygons.
 
 ### Postgres Javascript driver
-Postgis is an extension of Postgres so I could use the simple and well documented Javascript driver. To avoid opening a connection for each request, I used the out of the box connection pool provided by the driver itself. More details here: [backend/src/databases/postgres.databases.js](backend/src/databases/postgres.database.js).
+Postgis is an extension of Postgres so I could use the simple and well documented Javascript driver. To avoid opening a connection for each request, I used the out of the box connection pool provided by the driver itself. More details here: [postgres.databases.js](backend/src/databases/postgres.database.js).
 
 <H2 id="TryIt">Try it</H2>
 
