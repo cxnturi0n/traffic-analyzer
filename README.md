@@ -252,7 +252,7 @@ Postgis is an extension of Postgres so I could use the simple and well documente
 
 <H2 id="TryIt">Try it</H2>
 
-If you wish to try the software, you can follow these steps. At the end you will be able to access, locally, the react single page application, the Apollo GraphQL client web interface, the rest api for retrieving road geometries, the neo4j web interface and optionally(if decommented from the docker compose) pg-admin. You should be equipped with a Linux environment with docker, npm and yarn already installed. It works on both AMD64 and ARM64 architectures. This is an image representing the [Docker Compose](deploy/docker-compose.yaml) containers: 
+If you wish to try the software, you can follow these steps. At the end you will be able to access, locally, the react single page application, the Apollo GraphQL client web interface, the rest api for retrieving road geometries and the neo4j web interface. You should be equipped with a Linux environment with docker, npm and yarn already installed. It works on both AMD64 and ARM64 architectures. This is an image representing the [Docker Compose](deploy/docker-compose.yaml) containers: 
 
 ![ComposeServices](https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/6667efb8-4e09-436b-8c0a-04e34733f065)
 
@@ -301,6 +301,3 @@ On my discrete pc it takes around 3 minutes. Once done, you can access the follo
 - Apollo GraphQL UI: http://localhost:8087/traffic-analyzer/api/observations
 
 ![ApolloUI](https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/65864b18-e43d-48e2-b887-f5385daa85b3)
-
-- PGAdmin UI: http://localhost:5555 (Credentials in pgadmin.env)
-
