@@ -21,7 +21,7 @@ function validateQueryParameters(req, res, next) {
     );
   }
 
-  const roadIdsPattern = /^\[\s*(?:[0-9]\s*(?:,\s*[0-9])*)?\]$/;
+  const roadIdsPattern = /^\[\s*(?:\d+\s*(?:,\s*\d+\s*)*)?\]$/;
 
   if (roadIds && !roadIdsPattern.test(roadIds)) {
     throw new InvalidParameters(
