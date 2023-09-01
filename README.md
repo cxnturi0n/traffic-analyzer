@@ -289,9 +289,18 @@ chmod u+x install.sh
 ./install.sh
 ```
 
-Once done, you can access the following in your browser:
+On my discrete pc it takes around 3 minutes. Once done, you can access the following pages in your browser:
 - React UI: http://localhost/traffic-analyzer
+  
+![ReactUI](https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/c61f7bba-c8ac-4c8a-9c74-63d9c8eb3e8d)
+
 - Neo4j UI: http://localhost:7474 (Use bolt protocol with credentials in neo4j.env)
+  
+![Neo4jUI](https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/de5a5d88-2fd0-42d8-8833-3afcf5606652)
+
 - Apollo GraphQL UI: http://localhost:8087/traffic-analyzer/api/observations
+
+![ApolloUI](https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/65864b18-e43d-48e2-b887-f5385daa85b3)
+
 - PGAdmin UI: http://localhost:5555 (Credentials in pgadmin.env)
 
