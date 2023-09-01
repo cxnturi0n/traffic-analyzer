@@ -258,7 +258,7 @@ export default function App() {
         .get(
           `${REACT_APP_EXPRESS_BASE_PREFIX}${REACT_APP_EXPRESS_API_ROADS_ENDPOINT}?region=${region}${
             roadIds.length > 0
-              ? `&roadIds=[${roadIds}]`
+              ? `&roadIds=[${roadIds.map((road) => Number(road.road_id))}]`
               : ""
           }`
         )
