@@ -61,8 +61,7 @@ The API is empowered by Express, a backend web application framework designed fo
 <H3>Why Hybrid?</H3>
 
 The motivation behind this decision was to reduce latency when rendering road geometries on a map. Road geometries are stored as collections of GeoJSONs, where each road consists of a polygon containing ring coordinates (each polygon can have one or more rings), represented as an array of latitude and longitude pairs.
-
-The reason of this decision was to reduce latency to render road geometries on the map. Road geometries are stored as collections of geojsons, where each road consists of a polygon, which contain ring coordinates(each polygon can have 1 or more rings), as an array of latitude and longitude. Initially, I defined following typedefs to represent a *Road* object:
+Initially, I defined following typedefs to represent a *Road* object:
 ```
 #graphql
   ...
@@ -142,7 +141,7 @@ query Roads($where: RoadGeometriesWhere) {
 }
 ```
 Before rendering these geometries on the map, I had to convert the array of Road objects returned by the server into the format expected by Leaflet. This conversion process placed a significant load on the browser and turned out to be slow and inefficient, taking approximately 10 seconds to render all road geometries for a region like Anderlecht.
-By leveraging REST, I was able to return the road geometries in the exact format that Leaflet expected, effectively reducing the latency to render the map to less than 1 second.
+By leveraging REST, I was able to return the road geometries in the exact format that Leaflet expected, effectively reducing the latency to render the map in less than 1 second.
 
 <H3>Rest Api</H3>
 
