@@ -2,6 +2,7 @@
 <ul>
     <li><a href="#Introduction">Introduction</a></li>
     <li><a href="#Specifications">Specifications</a></li>
+    <li><a href="#Overview">Implementation overview</a></li>
     <li><a href="#WebInterface">Web interface</a></li>
     <li><a href="#HybridApi">Hybrid API</a></li>
     <li><a href="#Neo4j">Neo4j</a></li>
