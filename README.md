@@ -68,7 +68,7 @@ Initially, I defined following typedefs to represent a *Road* object:
 
   type Road {
     road_id: Int!
-    polygons: [Polygon]!
+    polygon: Polygon!
   }
 
   type Polygon {
@@ -92,7 +92,7 @@ Initially, I defined following typedefs to represent a *Road* object:
   }
 
 ```
-A road has a road ID, and a list of polygons, where each polygon has a list of rings, and each ring has an array of coordinates representing latitude and longitude pairs. This structure was designed to allow the server to be queried for road geometries based on certain filters.
+A road has a road ID, and a polygon. Each polygon has a list of rings, and each ring has an array of coordinates representing latitude and longitude pairs. This structure was designed to allow the server to be queried for road geometries based on certain filters.
 The challenge with this approach surfaced on the frontend. React Leaflet expects road geometries in the following format:
 ```
 [ [
@@ -123,7 +123,7 @@ To query and fetch all road geometries for a specific area, I used a query simil
 query Roads($where: RoadGeometriesWhere) {
   roads(where: $where) {
     road_id
-    polygons {
+    polygon {
       rings {
         coordinates {
           longitude
@@ -242,9 +242,9 @@ ogr2ogr -f "PostgreSQL" "PG:dbname=belgium_road_network user=postgres password=p
 ### Postgres queries
 Since the geometries are stored in the form of GeoJSON, fetching road geometries through a query is quite simple. For instance, to extract geometries related to Anderlecht, the following query is executed:
 ```
-SELECT ogc_fid AS road_id, ST_AsGeoJSON(wkb_geometry) AS polygons FROM anderlecht_streets;
+SELECT ogc_fid AS road_id, ST_AsGeoJSON(wkb_geometry) AS polygon FROM anderlecht_streets;
 ```
- The result of this query is an array of pairs that hold road IDs along with their corresponding polygons.
+ The result of this query is an array of pairs that hold road IDs along with their corresponding geometries.
 
 ### Postgres Javascript driver
 Postgis is an extension of Postgres so I could use the simple and well documented Javascript driver. To avoid opening a connection for each request, I used the out of the box connection pool provided by the driver itself. More details here: [postgres.databases.js](backend/src/databases/postgres.database.js).
