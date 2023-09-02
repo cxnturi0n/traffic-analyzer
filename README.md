@@ -251,7 +251,7 @@ Postgis is an extension of Postgres so I could use the simple and well documente
 
 <H2 id="TryIt">Try it</H2>
 
-If you wish to try the software, you can follow these steps. At the end you will be able to access, locally, the react single page application, the Apollo GraphQL client web interface, the rest api for retrieving road geometries and the neo4j web interface. You should be equipped with a Linux environment with docker engine and docker compose plugin already installed. It works on both AMD64 and ARM64 architectures. This is an image representing the [Docker Compose](deploy/docker-compose.yaml) containers: 
+If you wish to try the software, you can follow these steps. At the end you will be able to access, locally, the react single page application, the Apollo GraphQL client web interface, the rest api for retrieving road geometries and the neo4j web interface. You should be equipped with a Linux environment with docker engine and docker compose plugin already installed. It works on both AMD64 and ARM64 architectures. This following is an image representing the [Docker Compose](deploy/docker-compose.yaml) containers: 
 
 ![ComposeServices](https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/6667efb8-4e09-436b-8c0a-04e34733f065)
 
@@ -261,7 +261,7 @@ Within the setup, the *react_nginx* container is composed of an nginx server alo
 
 The [install.sh](deploy/install.sh) script handles the following tasks:
 1. Installs necessary dependencies for launching services and loading data into the database. This involves tools like `ogr2ogr` from the GDAL package.
-2. Downloads road geometries and OBU CSV files from my personal Google Drive.
+2. Downloads [road geometries](https://drive.google.com/file/d/1BXGqJDuagXCaF2V50XXh8zrCQFPSu7X4/view?usp=sharing) and [Anderlecht OBU CSVs](https://drive.google.com/file/d/1QqkWglvE26-KixXvIEQSjR3HZ_6_vgX3/view?usp=sharing) data from my personal Google Drive.
 3. Builds the Docker image for the React webpage along with the NGINX web server.
 4. Builds the Docker image for the Node.js Express server.
 5. Pulls Docker images for Neo4j, PostGIS, and optionally PGAdmin.
