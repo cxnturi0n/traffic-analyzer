@@ -2,7 +2,7 @@ version: '3.8'
 services:
   postgis:
     image: postgis/postgis:15-3.3-alpine
-    # For arm64 build(raspberry pi4) -> image: ghcr.io/baosystems/postgis:15-3.3
+    # For arm64 build -> image: ghcr.io/baosystems/postgis:15-3.3
     container_name: postgis
     ports:
       - '5432:5432'
