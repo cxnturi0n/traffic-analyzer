@@ -143,6 +143,20 @@ query Roads($where: RoadGeometriesWhere) {
 Before rendering these geometries on the map, I had to convert the array of Road objects returned by the server into the format expected by Leaflet. This conversion process placed a significant load on the browser and turned out to be slow and inefficient, taking approximately 10 seconds to render all road geometries for a region like Anderlecht.
 By leveraging REST, I was able to return the road geometries in the exact format that Leaflet expected, effectively reducing the latency to render the map in less than 1 second.
 
+<H3>GraphQL Api</H3>
+
+GraphQL is integrated into Express server using the Apollo Express Middleware. To get an in-depth look at how I've defined types and resolvers, you can explore the following files:
+- [Typedefs](backend/src/graphql/typedefs.graphql.js): This file contains the type definitions that outline the GraphQL schema.
+- [Resolvers](backend/src/graphql/resolvers.graphql.js): In this file, you'll find the resolver definitions responsible for resolving types by executing dynamic cypher queries.
+- [Resolver implementations](backend/src/services/observations.service.js): In this file, you'll find the resolver implementations.
+
+
+The clients can query observations using graqphQL syntax, that is simple and intuitive, mostly if you are familiar with json. You are only getting what you ask, and so there is not the risk of overfetching. If you only ask for the road ids and number of vehicles, you don't get timestamps and average speeds as well, like in a common rest api scenario would occur. The GraphQL server will handle the translation of the GraphQL query into a Cypher query and return the result in the JSON format as requested. The following diagram illustrates how the server processes a GraphQL query to retrieve the top 3 most congested roads from January 1, 2019, to January 16, 2019, specifically on weekends (Saturdays and Sundays).
+First, the Apollo client in the browser initiates an HTTP POST request to the GraphQL server's endpoint. In the request body, the client includes the query and additional variables representing filters. The server then invokes the appropriate resolver, responsible for dynamically generating a Cypher query that can fulfill the user's request.
+The query is executed, and the relevant fields are extracted. These extracted fields are then passed to Apollo Middleware, which encapsulates the data into an HTTP response and returns it in a simple JSON format.
+
+![GraphQLlogic](https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/d2e3de5d-8442-4097-b9c0-aa0e665df4c7)
+
 <H3>Rest Api</H3>
 
 ### 1. Get Road Geometries
@@ -170,21 +184,6 @@ By leveraging REST, I was able to return the road geometries in the exact format
   - `count` (Boolean, Optional): Get the count of roads.
 - **Example:**
   - Get road count for Belgium: `/traffic-analyzer/api/roads?region=Belgium&count=true`
-
-<H3>GraphQL Api</H3>
-
-GraphQL is integrated into Express server using the Apollo Express Middleware. To get an in-depth look at how I've defined types and resolvers, you can explore the following files:
-- [Typedefs](backend/src/graphql/typedefs.graphql.js): This file contains the type definitions that outline the GraphQL schema.
-- [Resolvers](backend/src/graphql/resolvers.graphql.js): In this file, you'll find the resolver definitions responsible for resolving types by executing dynamic cypher queries.
-- [Resolver implementations](backend/src/services/observations.service.js): In this file, you'll find the resolver implementations.
-
-
-The clients can query observations using graqphQL syntax, that is simple and intuitive, mostly if you are familiar with json. You are only getting what you ask, and so there is not the risk of overfetching. If you only ask for the road ids and number of vehicles, you don't get timestamps and average speeds as well, like in a common rest api scenario would occur. The GraphQL server will handle the translation of the GraphQL query into a Cypher query and return the result in the JSON format as requested. The following diagram illustrates how the server processes a GraphQL query to retrieve the top 3 most congested roads from January 1, 2019, to January 16, 2019, specifically on weekends (Saturdays and Sundays).
-First, the Apollo client in the browser initiates an HTTP POST request to the GraphQL server's endpoint. In the request body, the client includes the query and additional variables representing filters. The server then invokes the appropriate resolver, responsible for dynamically generating a Cypher query that can fulfill the user's request.
-The query is executed, and the relevant fields are extracted. These extracted fields are then passed to Apollo Middleware, which encapsulates the data into an HTTP response and returns it in a simple JSON format.
-
-![GraphQLlogic](https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/d2e3de5d-8442-4097-b9c0-aa0e665df4c7)
-
 
 <H3>Considerations</H3>
 
