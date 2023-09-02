@@ -55,8 +55,8 @@ run_command docker compose pull
 echo "Starting containers in detached mode..."
 run_command docker compose up -d
 
-echo "Waiting 10 seconds for databases to boot..."
-sleep 10 # If script fails here you need to increase this value to give time for neo4j to boot
+echo "Waiting 20 seconds for databases to boot..."
+sleep 20 # If script fails here you need to increase this value to give time for neo4j to boot
 
 echo "Initializing PostGIS..."
 run_command chmod u+x init-postgis.sh
