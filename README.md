@@ -61,7 +61,7 @@ The API is empowered by Express, a backend web application framework designed fo
 <H3>Why Hybrid?</H3>
 
 The motivation behind this decision was to reduce latency when rendering road geometries on a map. Road geometries are stored as collections of GeoJSONs, where each road consists of a polygon containing ring coordinates (each polygon can have one or more rings), represented as an array of latitude and longitude pairs.
-Initially, I defined following typedefs to represent a *Road* object:
+Initially, I defined the following types to represent and query *Road* objects:
 ```
 #graphql
   ...
