@@ -293,7 +293,7 @@ On my discrete pc it takes around 3 minutes. Once done, you can access the follo
   
 ![ReactUI](https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/c61f7bba-c8ac-4c8a-9c74-63d9c8eb3e8d)
 
-- Neo4j UI: http://localhost:7474 (Use bolt protocol with credentials in neo4j.env)
+- Neo4j UI: http://localhost:7474 (Credentials in [neo4j.env](deploy/neo4j.env))
   
 ![Neo4jUI](https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/de5a5d88-2fd0-42d8-8833-3afcf5606652)
 
