@@ -15,16 +15,16 @@ class RoadsService {
     if (!justCount || justCount !== "true") {
       let roadPolygons = "";
       if (roadIds && JSON.parse(roadIds).length > 0) {
-        const postgisGetSpecificRoadsPolygonsQuery = {
+        const postgisGetSpecificRoadPolygonsQuery = {
           // Craft postgres query to get the roads present in the roadIds array.
-          text: getSpecificRoadsPolygonsQuery(region),
+          text: getSpecificRoadPolygonsQuery(region),
           values: [JSON.parse(roadIds)], // Road ids will be read from postgres from placeholders to avoid SQL injections
         };
         roadPolygons = await getPool().query(
-          postgisGetSpecificRoadsPolygonsQuery
+          postgisGetSpecificRoadPolygonsQuery
         );
       } else {
-        roadPolygons = await getPool().query(getRoadsPolygonsQuery(region));
+        roadPolygons = await getPool().query(getRoadPolygonsQuery(region));
       }
       ret = getPolygonCoords(roadPolygons.rows);
     } else {
@@ -42,18 +42,18 @@ function getPolygonCoords(records) {
   return records.map((record) => {
     return {
       road_id: record.road_id,
-      polygon: JSON.parse(record.polygons).coordinates,
+      polygon: JSON.parse(record.polygon).coordinates,
     };
   });
 }
 
-function getRoadsPolygonsQuery(region) {
-  const query = `SELECT ogc_fid AS road_id, ST_AsGeoJSON(wkb_geometry) AS polygons FROM ${region}_streets`;
+function getRoadPolygonsQuery(region) {
+  const query = `SELECT ogc_fid AS road_id, ST_AsGeoJSON(wkb_geometry) AS polygon FROM ${region}_streets`;
   return query;
 }
 
-function getSpecificRoadsPolygonsQuery(region) {
-  const query = `SELECT ogc_fid AS road_id, ST_AsGeoJSON(wkb_geometry) AS polygons FROM ${region}_streets WHERE ogc_fid = ANY($1::int[])`;
+function getSpecificRoadPolygonsQuery(region) {
+  const query = `SELECT ogc_fid AS road_id, ST_AsGeoJSON(wkb_geometry) AS polygon FROM ${region}_streets WHERE ogc_fid = ANY($1::int[])`;
   return query;
 }
 
