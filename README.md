@@ -255,7 +255,7 @@ If you wish to try the software, you can follow these steps. At the end you will
 
 ![ComposeServices](https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/6667efb8-4e09-436b-8c0a-04e34733f065)
 
-The containers are interconnected through a Docker network bridge called *deploy_default*. This arrangement facilitates communication between the containers, employing their individual container names as hostnames. The Docker DNS (with the IP address 127.0.1.11) resolves these names to the respective IP addresses of the containers.
+The containers are interconnected through a Docker network bridge called *traffic-analyzer-network*. This arrangement facilitates communication between the containers, employing their individual container names as hostnames. The Docker DNS (with the IP address 127.0.1.11) resolves these names to the respective IP addresses of the containers.
 Within the setup, the *react_nginx* container is composed of an nginx server along with the compiled react web interface and apollo client. Nginx firstly acts as a web server, delivering the *index.html* file to user browsers when they access the webpage. Secondly, it acts as a reverse proxy, forwarding API requests initiated by the browser to the Express server running inside *nodejs_express* container. This Express server acts as a Rest and GraphQL server. It retrieves necessary data from the associated databases, running in *neo4j* and *postgis* containers, and subsequently responds with the relevant results. These responses are then processed by the browser to update various html components such as the Leaflet map, graphs, or tables within the user interface.
 
 
