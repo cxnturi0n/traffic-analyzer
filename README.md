@@ -288,7 +288,7 @@ chmod u+x install.sh
 ./install.sh
 ```
 
-On my discrete pc it takes around 3 minutes. Once done, you can access the following pages in your browser:
+On my discrete pc the installation process takes around 5 minutes. Once done, you can access the following pages in your browser:
 - React UI: http://localhost/traffic-analyzer
   
 ![ReactUI](https://github.com/cxnturi0n/traffic-analyzer/assets/75443422/c61f7bba-c8ac-4c8a-9c74-63d9c8eb3e8d)
